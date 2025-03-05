@@ -2,7 +2,12 @@
 <div class="row">
   <h1 class="text-center">Edit Campground</h1>
   <div class="col-6 offset-3">
-    <form method="post" action="/campgrounds/<%=campground._id%>?_method=PUT">
+    <form
+      class="needs-validation"
+      method="post"
+      action="/campgrounds/<%=campground._id%>?_method=PUT"
+      novalidate
+    >
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input
@@ -11,7 +16,9 @@
           id="title"
           class="form-control"
           value="<%=campground.title%>"
+          required
         />
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <label for="location" class="form-label">Location</label>
@@ -21,7 +28,9 @@
           id="location"
           class="form-control"
           value="<%=campground.location%>"
+          required
         />
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <label for="image" class="form-label">Image Url</label>
@@ -31,7 +40,9 @@
           id="image"
           class="form-control"
           value="<%=campground.image%>"
+          required
         />
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <label for="price" class="form-label">Campground Price</label>
@@ -46,7 +57,9 @@
             aria-label="Price"
             aria-describedby="price-label"
             value="<%=campground.price%>"
+            required
           />
+          <div class="valid-feedback">Looks good!</div>
         </div>
       </div>
       <div class="mb-3">
@@ -56,9 +69,11 @@
           name="campground[description]"
           id="description"
           class="form-control"
+          required
         >
 <%=campground.description%></textarea
         >
+        <div class="valid-feedback">Looks good!</div>
       </div>
       <div class="mb-3">
         <button type="submit" class="btn btn-success">Update campground</button>
