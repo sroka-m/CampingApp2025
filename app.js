@@ -6,9 +6,14 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const engine = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError");
-const campgrounds = require("./routes/campgrounds");
-const reviews = require("./routes/reviews");
+const campgroundsRoutes = require("./routes/campgrounds");
+const reviewsRoutes = require("./routes/reviews");
+const usersRoutes = require("./routes/users");
+const User = require("./models/user");
+
 // const Joi = require("joi"); we dont need it any more. only when creating schema
+var passport = require("passport");
+var LocalStrategy = require("passport-local");
 
 main().catch((err) => console.log(err));
 
@@ -38,17 +43,32 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+//make sure that u use sassion before u se the passport.session as it relies on that
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.get("/fakeuser", async (req, res) => {
+  const user = new User({ email: "dupa@gmail.com", username: "dupa" });
+  const newUser = await User.register(user, "chicken");
+  res.send(newUser);
+});
+
 app.get("/", (req, res) => {
   res.render("home");
 });
 app.use(function (req, res, next) {
+  res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
 });
 
-app.use("/campgrounds", campgrounds);
-app.use("/campgrounds/:id/reviews", reviews);
+app.use("/campgrounds", campgroundsRoutes);
+app.use("/campgrounds/:id/reviews", reviewsRoutes);
+app.use("/", usersRoutes);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page not found", 404));
