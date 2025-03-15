@@ -10,7 +10,6 @@ const campgroundsRoutes = require("./routes/campgrounds");
 const reviewsRoutes = require("./routes/reviews");
 const usersRoutes = require("./routes/users");
 const User = require("./models/user");
-
 // const Joi = require("joi"); we dont need it any more. only when creating schema
 var passport = require("passport");
 var LocalStrategy = require("passport-local");
@@ -59,12 +58,27 @@ app.get("/fakeuser", async (req, res) => {
 app.get("/", (req, res) => {
   res.render("home");
 });
-app.use(function (req, res, next) {
+
+app.use((req, res, next) => {
+  if (
+    !["/login", "/register", "/"].includes(req.originalUrl) &&
+    !req.originalUrl.includes("reviews")
+  ) {
+    req.session.returnTo = req.originalUrl;
+    console.log(req.session.returnTo);
+  }
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
 });
+
+// app.use(function (req, res, next) {
+//   res.locals.currentUser = req.user;
+//   res.locals.success = req.flash("success");
+//   res.locals.error = req.flash("error");
+//   next();
+// });
 
 app.use("/campgrounds", campgroundsRoutes);
 app.use("/campgrounds/:id/reviews", reviewsRoutes);

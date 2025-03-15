@@ -41,9 +41,8 @@ router.post(
   }),
   (req, res) => {
     req.flash("success", "welcome back!");
-    console.log(`${res.locals.returnTo} this is inside loging`);
+    console.log(`${res.locals.returnTo} redirecturl variable `);
     const redirectUrl = res.locals.returnTo || "/campgrounds";
-    console.log(`${redirectUrl} this is redirectURL`);
     res.redirect(redirectUrl);
   }
 );
