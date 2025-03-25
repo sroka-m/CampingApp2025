@@ -12,10 +12,14 @@ module.exports.createCampground = async (req, res, next) => {
   // if (!req.body.campground) {
   //   throw new ExpressError("Invalid Campground data", 400);
   // }
-
   const campground = new Campground(req.body.campground);
+  campground.images = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  }));
   campground.author = req.user._id;
   await campground.save();
+  console.log(campground);
   req.flash("success", "Successfuly created campground!");
   res.redirect(`/campgrounds/${campground._id}`);
 };
@@ -53,6 +57,12 @@ module.exports.updateCampground = async (req, res) => {
     { ...req.body.campground },
     { new: true, runValidators: true }
   );
+  const imgs = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+  }));
+  campground.images.push(...imgs);
+  await campground.save();
   req.flash("success", "Successfuly updated campground!");
   res.redirect(`/campgrounds/${campground._id}`);
 };
