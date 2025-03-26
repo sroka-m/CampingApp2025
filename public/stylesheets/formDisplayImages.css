@@ -1,0 +1,49 @@
+//this is used to diaply images preview imges before they are uploaded in the campgrund/new and also in edit.
+//additinally the same styles are used to add some responsivness to the images retreived from claudinary (on the edit form when deleitng them )
+//please note the images form cloudianry are resized in the file models/campgrounds (200x300px) so that we dont retreive such a  big size images, but thumbnails
+//On a 32-inch screen, 12vh (12 viewport height) would correspond to roughly 108 pixels so we ought to be good
+
+//this is for the file imput to say choose image(s).. rather than choose files
+
+.custom-file-button input[type="file"] {
+  margin-left: -2px !important;
+}
+.custom-file-button input[type="file"]::-webkit-file-upload-button {
+  display: none;
+}
+.custom-file-button input[type="file"]::file-selector-button {
+  display: none;
+}
+.custom-file-button:hover label {
+  background-color: #dde0e3;
+  cursor: pointer;
+}
+
+//this is when sleecting files for fiel input we can see the preview of the seelcted images,
+//ImagePreview id is the div that displays the thumbnails of the selected images, also i used the same class to display the images
+//on edit when we want to see them before and decide if we want to delete them.
+.ImagePreview {
+  display: flex;
+  flex-wrap: wrap;
+}
+.ImagePreview div {
+  /* height: 10vh;
+    margin-bottom: 0.25rem; */
+  display: inline-block;
+  text-align: center;
+}
+.ImagePreview div p {
+  padding: 0.25rem;
+}
+.ImagePreview div img {
+  /* height: 80%; */
+  height: 12vh;
+  border-radius: 5px;
+  /* margin-bottom: 0.25rem; */
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  opacity: 85%;
+}
+
+.ImagePreview div:not(:last-child) {
+  margin-right: 0.25rem;
+}

@@ -1,5 +1,5 @@
 const fileInputImages = document.querySelector(".fileInputImages");
-const fileInputPreview = document.querySelector(".fileInputPreview");
+const fileInputPreview = document.querySelector(".ImagePreview");
 
 fileInputImages.addEventListener("change", imagePreview);
 
@@ -37,14 +37,14 @@ function imagePreview(event) {
 
 // function previewMultiple(event) {
 //   const images = document.getElementById("fileInputImages");
-//   document.getElementById("fileInputPreview").innerHTML = "";
+//   document.getElementById("ImagePreview").innerHTML = "";
 //   console.log(images);
 //   const number = images.files.length;
 //   for (i = 0; i < number; i++) {
 //     console.log(event.target.files[i]);
 //     var urls = URL.createObjectURL(event.target.files[i]);
 //     console.log(urls);
-//     document.getElementById("fileInputPreview").innerHTML +=
+//     document.getElementById("ImagePreview").innerHTML +=
 //       '<img src="' + urls + '">';
 //   }
 // }

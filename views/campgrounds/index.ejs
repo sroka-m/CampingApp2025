@@ -7,8 +7,13 @@
   <% for(let campground of campgrounds){%>
   <div class="card">
     <div class="row">
-      <div class="col-md-4">
-        <img class="img-fluid" src="<%=campground.images[0].url%>" alt="" />
+      <div class="col-md-4" style="height: 35vh; overflow: hidden">
+        <img
+          class="img-fluid w-100 h-100"
+          style="object-fit: cover"
+          src="<%=campground.images[0].url%>"
+          alt=""
+        />
       </div>
       <div class="col-md-8">
         <div class="card-body">
