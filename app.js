@@ -95,6 +95,10 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
   const { status = 505 } = err;
   if (!err.message) err.message = "Something went wrong";
+  //i did it because upload.array("image", 4) in multer 1.xx gives"Unexpected field" fixed, in version 2 but not out yet
+  if (err.message == "Unexpected field") {
+    err.message = "Number of files must not exceed 4";
+  }
   res.status(status).render("error", { err });
 });
 

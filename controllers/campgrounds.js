@@ -1,5 +1,6 @@
 const Campground = require("../models/campground");
 const { cloudinary } = require("../claudinary");
+const ExpressError = require("../utils/ExpressError");
 
 module.exports.index = async (req, res) => {
   const campgrounds = await Campground.find({});
@@ -13,6 +14,14 @@ module.exports.createCampground = async (req, res, next) => {
   // if (!req.body.campground) {
   //   throw new ExpressError("Invalid Campground data", 400);
   // }
+  // console.log(req.files);
+  if (req.files.length === 0) {
+    throw new ExpressError("Please upload a file", 400);
+  }
+  // if (req.files.length > 4) {
+  //   throw new ExpressError("Number of files must not exceed 4", 400);
+  // } //this still uploads the images so i think i need to overwite the error message
+
   const campground = new Campground(req.body.campground);
   campground.images = req.files.map((f) => ({
     url: f.path,
@@ -49,16 +58,40 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateCampground = async (req, res) => {
   const { id } = req.params;
-  // console.log(req.body);
   //why spreading it, we are not mutaning req.body.campgound, we copy it
   // console.log(req.body.campground);
   // console.log({ ...req.body.campground });
 
-  const campground = await Campground.findByIdAndUpdate(
-    id,
-    { ...req.body.campground },
-    { new: true, runValidators: true }
-  );
+  const campground = await Campground.findById(id);
+  //req.body.deleteImages  is undefined when it is empty, whereas  req.files has length when it is empty
+  if (
+    req.body.deleteImages &&
+    campground.images.length -
+      req.body.deleteImages.length +
+      req.files.length ===
+      0
+  ) {
+    throw new ExpressError("Please upload an image", 400);
+  } else if (
+    (req.body.deleteImages &&
+      campground.images.length -
+        req.body.deleteImages.length +
+        req.files.length >
+        4) ||
+    (!req.body.deleteImages && campground.images.length + req.files.length > 4)
+  ) {
+    for (let file of req.files) {
+      await cloudinary.uploader.destroy(file.filename);
+    }
+    throw new ExpressError("Total image count cannot exceed 4", 400);
+  }
+  await campground.updateOne({ ...req.body.campground });
+
+  // const campground = await Campground.findByIdAndUpdate(
+  //   id,
+  //   { ...req.body.campground },
+  //   { new: true, runValidators: true }
+  // );
   const imgs = req.files.map((f) => ({
     url: f.path,
     filename: f.filename,
@@ -73,7 +106,6 @@ module.exports.updateCampground = async (req, res) => {
     await campground.updateOne({
       $pull: { images: { filename: { $in: req.body.deleteImages } } },
     });
-    // console.log(campground);
   }
 
   req.flash("success", "Successfuly updated campground!");
