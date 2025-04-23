@@ -53,12 +53,6 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.get("/fakeuser", async (req, res) => {
-  const user = new User({ email: "dupa@gmail.com", username: "dupa" });
-  const newUser = await User.register(user, "chicken");
-  res.send(newUser);
-});
-
 app.get("/", (req, res) => {
   res.render("home");
 });

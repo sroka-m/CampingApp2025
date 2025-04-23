@@ -1,6 +1,8 @@
 const Campground = require("../models/campground");
 const { cloudinary } = require("../claudinary");
 const ExpressError = require("../utils/ExpressError");
+const maptilerClient = require("@maptiler/client");
+maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
 module.exports.index = async (req, res) => {
   const campgrounds = await Campground.find({});
@@ -22,14 +24,21 @@ module.exports.createCampground = async (req, res, next) => {
   //   throw new ExpressError("Number of files must not exceed 4", 400);
   // } //this still uploads the images so i think i need to overwite the error message
 
+  const geoData = await maptilerClient.geocoding.forward(
+    req.body.campground.location,
+    { limit: 1 }
+  );
+
   const campground = new Campground(req.body.campground);
+  campground.geometry = geoData.features[0].geometry;
+
   campground.images = req.files.map((f) => ({
     url: f.path,
     filename: f.filename,
   }));
   campground.author = req.user._id;
   await campground.save();
-  // console.log(campground);
+  console.log(campground);
   req.flash("success", "Successfuly created campground!");
   res.redirect(`/campgrounds/${campground._id}`);
 };
@@ -86,6 +95,12 @@ module.exports.updateCampground = async (req, res) => {
     throw new ExpressError("Total image count cannot exceed 4", 400);
   }
   await campground.updateOne({ ...req.body.campground });
+  const geoData = await maptilerClient.geocoding.forward(
+    req.body.campground.location,
+    { limit: 1 }
+  );
+
+  campground.geometry = geoData.features[0].geometry;
 
   // const campground = await Campground.findByIdAndUpdate(
   //   id,

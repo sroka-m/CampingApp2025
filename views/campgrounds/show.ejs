@@ -1,5 +1,9 @@
 <% layout('layouts/boilerplate') -%>
 <link rel="stylesheet" href="/stylesheets/starability.css" />
+<script>
+  const maptilerApiKey = '<%- process.env.MAPTILER_API_KEY %>';
+  const campground = <%-JSON.stringify(campground)%>
+</script>
 <div class="row">
   <div class="col-6">
     <div id="campgroundCarousel" class="carousel slide">
@@ -72,6 +76,7 @@
   </div>
 
   <div class="col-6">
+    <div id="map" style="width: 400px; height: 300px"></div>
     <%if(currentUser){%>
     <h2>Leave a Review</h2>
     <form
@@ -169,3 +174,4 @@
     <%}%>
   </div>
 </div>
+<script src="/scripts/showPageMap.js"></script>
