@@ -53,10 +53,6 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.get("/", (req, res) => {
-  res.render("home");
-});
-
 app.use((req, res, next) => {
   if (
     !["/login", "/register", "/"].includes(req.originalUrl) &&
@@ -69,6 +65,14 @@ app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
+});
+
+app.get("/", (req, res) => {
+  res.render("home");
+});
+
+app.get("/dog", (req, res) => {
+  res.render("dog");
 });
 
 // app.use(function (req, res, next) {
