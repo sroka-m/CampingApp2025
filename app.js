@@ -17,8 +17,12 @@ const reviewsRoutes = require("./routes/reviews");
 const usersRoutes = require("./routes/users");
 const User = require("./models/user");
 // const Joi = require("joi"); we dont need it any more. only when creating schema
-var passport = require("passport");
-var LocalStrategy = require("passport-local");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+
+const dbUrl = process.env.DB_URL;
+
+// "mongodb://127.0.0.1:27017/yelpCamp"
 
 main().catch((err) => console.log(err));
 
