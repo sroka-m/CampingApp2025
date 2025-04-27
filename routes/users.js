@@ -5,13 +5,13 @@ const users = require("../controllers/users");
 const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 const passport = require("passport");
-const { storeReturnTo } = require("../middleware");
+const { storeReturnTo, validateUser } = require("../middleware");
 const user = require("../models/user");
 
 router
   .route("/register")
   .get(users.renderRegister)
-  .post(catchAsync(users.register));
+  .post(validateUser, catchAsync(users.register));
 
 router
   .route("/login")

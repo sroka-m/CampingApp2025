@@ -151,6 +151,8 @@ app.use((err, req, res, next) => {
   if (err.message == "Unexpected field") {
     err.message = "Number of files must not exceed 4";
   }
+  // console.log(err);
+  // console.log(err.stack);
   res.status(status).render("error", { err });
 });
 
