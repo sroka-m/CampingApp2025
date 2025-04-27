@@ -26,38 +26,51 @@ module.exports.storeReturnTo = (req, res, next) => {
   next();
 };
 
-module.exports.validateCampground = (req, res, next) => {
-  //joi schema acts before data is saved to mongo
-  const { error } = campgroundSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
+module.exports.validateJoiSchema = (schamaToValidate) => {
+  return function (req, res, next) {
+    //joi schema acts before data is saved to mongo
+    const { error } = schamaToValidate.validate(req.body);
+    if (error) {
+      const msg = error.details.map((el) => el.message).join(",");
+      throw new ExpressError(msg, 400);
+    } else {
+      next();
+    }
+  };
 };
 
-module.exports.validateReview = (req, res, next) => {
-  //joi schema acts before data is saved to mongo
-  const { error } = reviewSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-};
+// module.exports.validateCampground = (req, res, next) => {
+//   //joi schema acts before data is saved to mongo
+//   const { error } = campgroundSchema.validate(req.body);
+//   if (error) {
+//     const msg = error.details.map((el) => el.message).join(",");
+//     throw new ExpressError(msg, 400);
+//   } else {
+//     next();
+//   }
+// };
 
-module.exports.validateUser = (req, res, next) => {
-  //joi schema acts before data is saved to mongo
-  const { error } = userSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(msg, 400);
-  } else {
-    next();
-  }
-};
+// module.exports.validateReview = (req, res, next) => {
+//   //joi schema acts before data is saved to mongo
+//   const { error } = reviewSchema.validate(req.body);
+//   if (error) {
+//     const msg = error.details.map((el) => el.message).join(",");
+//     throw new ExpressError(msg, 400);
+//   } else {
+//     next();
+//   }
+// };
+
+// module.exports.validateUser = (req, res, next) => {
+//   //joi schema acts before data is saved to mongo
+//   const { error } = userSchema.validate(req.body);
+//   if (error) {
+//     const msg = error.details.map((el) => el.message).join(",");
+//     throw new ExpressError(msg, 400);
+//   } else {
+//     next();
+//   }
+// };
 
 module.exports.isAuthor = async (req, res, next) => {
   const { id } = req.params;

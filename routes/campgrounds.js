@@ -4,7 +4,8 @@ const multer = require("multer");
 const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
 const campgounds = require("../controllers/campgrounds");
-const { isLoggedIn, validateCampground, isAuthor } = require("../middleware");
+const { campgroundSchema } = require("../schemas");
+const { isLoggedIn, validateJoiSchema, isAuthor } = require("../middleware");
 //aitomatically looks for index.js file
 const { storage } = require("../claudinary");
 // const upload = multer({ storage: storage });
@@ -30,7 +31,7 @@ router
   .post(
     isLoggedIn,
     upload.array("image", 4),
-    validateCampground,
+    validateJoiSchema(campgroundSchema),
     catchAsync(campgounds.createCampground)
   );
 // .post(upload.array("image"), (req, res) => {
@@ -58,7 +59,7 @@ router
     isLoggedIn,
     isAuthor,
     upload.array("image", 4),
-    validateCampground,
+    validateJoiSchema(campgroundSchema),
     catchAsync(campgounds.updateCampground)
   )
   .delete(isLoggedIn, isAuthor, catchAsync(campgounds.deleteCampground));

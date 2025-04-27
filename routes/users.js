@@ -2,16 +2,18 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const users = require("../controllers/users");
+const { userSchema } = require("../schemas");
 const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 const passport = require("passport");
-const { storeReturnTo, validateUser } = require("../middleware");
+// const { storeReturnTo, validateUser } = require("../middleware");
+const { storeReturnTo, validateJoiSchema } = require("../middleware");
 const user = require("../models/user");
 
 router
   .route("/register")
   .get(users.renderRegister)
-  .post(validateUser, catchAsync(users.register));
+  .post(validateJoiSchema(userSchema), catchAsync(users.register));
 
 router
   .route("/login")
