@@ -9,12 +9,8 @@
     form.addEventListener(
       "submit",
       (event) => {
-        // if(form.fileInputError.firstChild){
-        // event.preventDefault();
-        // event.stopPropagation();
-        // }
-        if (form.elements.fileInputImages.files.length > 4) {
-          console.log("cannot be more than 4 files");
+        if (form.children.fileInputError.firstChild) {
+          console.log("inside form prevention");
           event.preventDefault();
           event.stopPropagation();
         }

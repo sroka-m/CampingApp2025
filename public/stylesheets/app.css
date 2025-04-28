@@ -9,7 +9,11 @@
   margin-bottom: 1rem;
 }
 
-#invalidType,
+/* #invalidType,
 #invalidSize {
+  color: red;
+} */
+
+#fileInputError {
   color: red;
 }
