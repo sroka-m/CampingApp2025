@@ -8,3 +8,8 @@
   height: 30vh;
   margin-bottom: 1rem;
 }
+
+#invalidType,
+#invalidSize {
+  color: red;
+}

@@ -62,7 +62,8 @@
           <span class="input-group-text" id="price-label">$</span>
           <input
             id="price"
-            type="text"
+            type="number"
+            min="0"
             class="form-control"
             placeholder="0.00"
             name="campground[price]"
@@ -94,8 +95,11 @@
           id="fileInputImages"
           name="image"
           multiple
+          required
         />
       </div>
+      <p id="invalidType"></p>
+      <p id="invalidSize"></p>
       <div class="ImagePreview"></div>
       <div class="mb-3">
         <button type="submit" class="btn btn-success">Add campground</button>
@@ -104,5 +108,3 @@
     <a href="/campgrounds">All Campgounds</a>
   </div>
 </div>
-
-<p></p>
