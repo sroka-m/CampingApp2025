@@ -17,3 +17,14 @@
 #fileInputError {
   color: red;
 }
+
+//i had to overwrite bootstrap, i could write my own validation, but i device to use a div fill with errors (the form has class nonvalidate
+//so the browser validaiton API wont work )
+.customErrorInput {
+  border-color: #dc3545 !important;
+  box-shadow: none !important;
+  background-image: none !important;
+  /* border-color: --bs-form-invalid-border-color; */
+
+  /* transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; */
+}

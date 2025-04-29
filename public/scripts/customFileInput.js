@@ -9,9 +9,11 @@ if (fileInputImages) {
 }
 
 function updateImagePreview() {
+  fileInputImages.classList.remove("customErrorInput");
   while (fileInputPreview.firstChild) {
     fileInputPreview.removeChild(fileInputPreview.firstChild);
   }
+
   while (fileInputError.firstChild) {
     fileInputError.removeChild(fileInputError.firstChild);
   }

@@ -9,11 +9,17 @@
     form.addEventListener(
       "submit",
       (event) => {
-        if (form.children.fileInputError.firstChild) {
-          console.log("inside form prevention");
-          event.preventDefault();
-          event.stopPropagation();
+        //without if (fileInputError)  the validation on the user/register is gooing to break, since on theese forms
+        //fileInputError is not defined
+        if (fileInputError) {
+          if (form.children.fileInputError.firstChild) {
+            console.log("inside form prevention");
+            fileInputImages.classList.add("customErrorInput");
+            event.preventDefault();
+            event.stopPropagation();
+          }
         }
+
         if (!form.checkValidity()) {
           event.preventDefault();
           event.stopPropagation();

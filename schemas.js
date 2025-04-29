@@ -42,8 +42,19 @@ module.exports.reviewSchema = Joi.object({
   }).required(),
 });
 
+//joi validation does not like \d for numbers
 module.exports.userSchema = Joi.object({
-  username: Joi.string().required().escapeHTML(),
+  username: Joi.string()
+    .pattern(new RegExp("^[a-zA-Z0-9]{6,20}$"))
+    .required()
+    .escapeHTML(),
   email: Joi.string().email({ minDomainSegments: 2 }).required().escapeHTML(),
-  password: Joi.string().required().escapeHTML(),
+  password: Joi.string()
+    .pattern(
+      new RegExp(
+        "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^!?,])[a-zA-Z0-9@#$%^!?,]{6,20}$"
+      )
+    )
+    .required()
+    .escapeHTML(),
 }).required();
