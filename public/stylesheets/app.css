@@ -28,3 +28,14 @@
 
   /* transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out; */
 }
+/* does not work
+.custom-tooltip {
+  --bs-tooltip-bg: "#FF0000";
+} */
+.tooltip .tooltip-inner {
+  --bs-tooltip-bg: #4d8bb7;
+  text-align: left;
+}
+.tooltip .tooltip-arrow::before {
+  --bs-tooltip-bg: #4d8bb7;
+}

@@ -1,4 +1,10 @@
 <% layout('layouts/boilerplate') -%>
+<style>
+  .custom-tooltip {
+    --bs-tooltip-bg: "#FF0000";
+    /* --bs-tooltip-color: var(--bs-white); */
+  }
+</style>
 <div class="container d-flex justify-content-center align-items-center mt-3">
   <div class="row">
     <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
@@ -18,6 +24,25 @@
           >
             <div class="mb-3">
               <label for="username" class="form-label">Username</label>
+              <svg
+                id="example"
+                data-bs-toggle="tooltip"
+                data-bs-html="true"
+                data-bs-title="<p> Username must:</p>
+        <ul>
+          <li>contain only letters or numbers</li>
+          <li>Be between 6 and 20 characters long</li>
+        </ul>"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M11 17h2v-6h-2zm1-8q.425 0 .713-.288T13 8t-.288-.712T12 7t-.712.288T11 8t.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"
+                />
+              </svg>
               <input
                 type="text"
                 name="username"
@@ -41,7 +66,28 @@
               <div class="valid-feedback">Looks good!</div>
             </div>
             <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
+              <label for="password" class="form-label">Password </label>
+              <svg
+                data-bs-toggle="tooltip"
+                data-bs-html="true"
+                data-bs-title="<p> Password must contain at least:</p>
+            <ul>
+              <li>one upper case letter</li>
+              <li>one lower case letter</li>
+              <li>one number</li>
+              <li>one special character from the following: @#$%^?,!</li>
+              <li>Be between 6 and 20 characters long</li>
+            </ul>"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M11 17h2v-6h-2zm1-8q.425 0 .713-.288T13 8t-.288-.712T12 7t-.712.288T11 8t.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"
+                />
+              </svg>
               <!-- &, >, < are not allowed by sanitize-html, so made sure to remove them from password regex -->
               <!-- joi validation does not like \d for numbers -->
               <input
@@ -63,3 +109,7 @@
     </div>
   </div>
 </div>
+<script>
+  // const exampleEl = document.getElementById("example");
+  // const tooltip = new bootstrap.Tooltip(exampleEl, options);
+</script>
