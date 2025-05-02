@@ -13,9 +13,9 @@ module.exports.renderNewForm = (req, res) => {
   res.render("campgrounds/new");
 };
 module.exports.createCampground = async (req, res, next) => {
-  // if (req.files.length === 0) {
-  //   throw new ExpressError("Please upload a file", 400);
-  // }
+  if (req.files.length === 0) {
+    throw new ExpressError("Please upload a file", 400);
+  }
 
   const geoData = await maptilerClient.geocoding.forward(
     req.body.campground.location,
