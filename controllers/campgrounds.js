@@ -13,21 +13,23 @@ module.exports.renderNewForm = (req, res) => {
   res.render("campgrounds/new");
 };
 module.exports.createCampground = async (req, res, next) => {
-  // if (!req.body.campground) {
-  //   throw new ExpressError("Invalid Campground data", 400);
+  // if (req.files.length === 0) {
+  //   throw new ExpressError("Please upload a file", 400);
   // }
-  // console.log(req.files);
-  if (req.files.length === 0) {
-    throw new ExpressError("Please upload a file", 400);
-  }
-  // if (req.files.length > 4) {
-  //   throw new ExpressError("Number of files must not exceed 4", 400);
-  // } //this still uploads the images so i think i need to overwite the error message
 
   const geoData = await maptilerClient.geocoding.forward(
     req.body.campground.location,
     { limit: 1 }
   );
+  if (geoData.features.length === 0) {
+    for (let file of req.files) {
+      await cloudinary.uploader.destroy(file.filename);
+    }
+    throw new ExpressError(
+      "Location not found. Please consider checking the spelling or format.",
+      400
+    );
+  }
 
   const campground = new Campground(req.body.campground);
   campground.geometry = geoData.features[0].geometry;
