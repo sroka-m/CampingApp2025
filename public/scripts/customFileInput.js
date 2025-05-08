@@ -87,6 +87,7 @@ function updateImagePreview() {
   }
 
   fileInputError.append(fragmentErrors);
+  fileInputImages.setCustomValidity(fileInputError.firstChild ? "error" : "");
 }
 
 function validFileType(file) {

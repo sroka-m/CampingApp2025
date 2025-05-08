@@ -3,29 +3,46 @@
 
   // Fetch all the forms we want to apply custom Bootstrap validation styles to
   const forms = document.querySelectorAll(".needs-validation");
+  const inputLocation = document.querySelector(".inputLocation");
 
   // Loop over them and prevent submission
   Array.from(forms).forEach((form) => {
     form.addEventListener(
       "submit",
-      (event) => {
-        //without if (fileInputError)  the validation on the user/register is gooing to break, since on theese forms
-        //fileInputError is not defined
-        if (fileInputError) {
-          if (form.children.fileInputError.firstChild) {
-            console.log("inside form prevention");
-            fileInputImages.classList.add("customErrorInput");
-            event.preventDefault();
-            event.stopPropagation();
+      async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (inputLocation) {
+          inputLocation.setCustomValidity("");
+          if (inputLocation.value.trim() !== 0) {
+            try {
+              const res = await fetch(
+                `https://api.maptiler.com/geocoding/${inputLocation.value.trim()}.json?key=${mapApiKey}`
+              );
+              const data = await res.json();
+              console.log(data);
+              console.log(data.features.length);
+
+              if (data.features.length === 0) {
+                console.log("i am inside !data.features.length");
+                inputLocation.setCustomValidity("No location were found.");
+              }
+            } catch (err) {
+              console.log(err);
+              inputLocation.setCustomValidity(
+                "Location validation failed, please try again."
+              );
+            }
           }
         }
 
-        if (!form.checkValidity()) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-
         form.classList.add("was-validated");
+
+        // submit only if everything (including async) passed
+        if (form.checkValidity()) {
+          form.submit(); // native submit
+        }
       },
       false
     );

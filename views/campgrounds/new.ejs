@@ -1,4 +1,7 @@
 <% layout('layouts/boilerplate') -%>
+<script>
+  const mapApiKey = "<%=mapkey%>";
+</script>
 <div class="row">
   <h1 class="text-center">New Campground</h1>
   <div class="col-md-6 offset-md-3">
@@ -26,9 +29,12 @@
           type="text"
           name="campground[location]"
           id="location"
-          class="form-control"
+          class="form-control inputLocation"
           required
         />
+        <div class="invalid-feedback">
+          Location not found. Please consider checking spelling or format.
+        </div>
         <div class="valid-feedback">Looks good!</div>
       </div>
 
@@ -97,10 +103,9 @@
           multiple
           required
         />
+        <div class="invalid-feedback" id="fileInputError"></div>
       </div>
-      <div id="fileInputError"></div>
-      <!-- <p id="invalidType"></p>
-      <p id="invalidSize"></p> -->
+      <!-- <div id="fileInputError"></div> -->
       <div class="ImagePreview"></div>
       <div class="mb-3">
         <button type="submit" class="btn btn-success">Add campground</button>

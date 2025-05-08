@@ -3,6 +3,7 @@ const { cloudinary } = require("../claudinary");
 const ExpressError = require("../utils/ExpressError");
 const maptilerClient = require("@maptiler/client");
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
+const mapkey = maptilerClient.config.apiKey;
 
 module.exports.index = async (req, res) => {
   const campgrounds = await Campground.find({});
@@ -10,7 +11,7 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.renderNewForm = (req, res) => {
-  res.render("campgrounds/new");
+  res.render("campgrounds/new", { mapkey });
 };
 module.exports.createCampground = async (req, res, next) => {
   if (req.files.length === 0) {
@@ -26,7 +27,7 @@ module.exports.createCampground = async (req, res, next) => {
       await cloudinary.uploader.destroy(file.filename);
     }
     throw new ExpressError(
-      "Location not found. Please consider checking the spelling or format.",
+      "Location not found. Please consider checking spelling or format.",
       400
     );
   }
@@ -64,7 +65,7 @@ module.exports.renderEditForm = async (req, res) => {
     req.flash("error", "Cannot find that campground!");
     return res.redirect("/campgrounds");
   }
-  res.render("campgrounds/edit", { campground });
+  res.render("campgrounds/edit", { campground, mapkey });
 };
 
 module.exports.updateCampground = async (req, res) => {
