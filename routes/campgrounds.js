@@ -3,7 +3,7 @@ const multer = require("multer");
 const ExpressError = require("../utils/ExpressError");
 const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
-const campgounds = require("../controllers/campgrounds");
+const campgrounds = require("../controllers/campgrounds");
 const { campgroundSchema } = require("../schemas");
 const { isLoggedIn, validateJoiSchema, isAuthor } = require("../middleware");
 //aitomatically looks for index.js file
@@ -39,11 +39,11 @@ const upload = multer({
   // },
 });
 
-router.route("/").get(catchAsync(campgounds.index)).post(
+router.route("/").get(catchAsync(campgrounds.index)).post(
   isLoggedIn,
   upload.array("image", 4),
   // validateJoiSchema(campgroundSchema),
-  catchAsync(campgounds.createCampground)
+  catchAsync(campgrounds.createCampground)
 );
 // .post(upload.array("image"), (req, res) => {
 //   console.log(req.body);
@@ -54,25 +54,26 @@ router.route("/").get(catchAsync(campgounds.index)).post(
 //   res.send("good");
 // });
 
-router.get("/new", isLoggedIn, campgounds.renderNewForm);
+router.get("/new", isLoggedIn, campgrounds.renderNewForm);
+router.get("/API", catchAsync(campgrounds.campgroundsAPI));
 
 router.get(
   "/:id/edit",
   isLoggedIn,
   isAuthor,
-  catchAsync(campgounds.renderEditForm)
+  catchAsync(campgrounds.renderEditForm)
 );
 
 router
   .route("/:id")
-  .get(catchAsync(campgounds.showCampground))
+  .get(catchAsync(campgrounds.showCampground))
   .put(
     isLoggedIn,
     isAuthor,
     upload.array("image", 4),
     // validateJoiSchema(campgroundSchema),
-    catchAsync(campgounds.updateCampground)
+    catchAsync(campgrounds.updateCampground)
   )
-  .delete(isLoggedIn, isAuthor, catchAsync(campgounds.deleteCampground));
+  .delete(isLoggedIn, isAuthor, catchAsync(campgrounds.deleteCampground));
 
 module.exports = router;

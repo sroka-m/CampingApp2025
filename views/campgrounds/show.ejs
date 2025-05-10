@@ -2,7 +2,12 @@
 <link rel="stylesheet" href="/stylesheets/starability.css" />
 <script>
   const maptilerApiKey = '<%- process.env.MAPTILER_API_KEY %>';
-  const campground = <%-JSON.stringify(campground)%>
+    const campground = {
+        geometry: {
+        coordinates: <%-JSON.stringify(campground.geometry.coordinates)%>},
+        title: "<%= campground.title %>",
+        location: "<%= campground.location %>"
+   };
 </script>
 <div class="row">
   <div class="col-6">

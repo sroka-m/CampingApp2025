@@ -1,7 +1,6 @@
 <% layout('layouts/boilerplate') -%>
 <script>
   const maptilerApiKey = "<%- process.env.MAPTILER_API_KEY %>";
-  const campgrounds = { features: <%- JSON.stringify(campgrounds) %>}
 </script>
 <div id="cluster-map"></div>
 <h1>All campgrounds</h1>

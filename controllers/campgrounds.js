@@ -13,6 +13,25 @@ module.exports.index = async (req, res) => {
 module.exports.renderNewForm = (req, res) => {
   res.render("campgrounds/new", { mapkey });
 };
+
+//virtuals do not seem to work if u map over the objects, so i had to create a property
+module.exports.campgroundsAPI = async (req, res) => {
+  const campgrounds = await Campground.find({});
+  const campgroundsGeo = {
+    features: campgrounds.map((camp) => {
+      return {
+        geometry: {
+          coordinates: camp.geometry.coordinates,
+        },
+        properties: {
+          popUpMarkup: `<strong><a href="/campgrounds/${camp.id}">${camp.title}</a></strong>`,
+        },
+      };
+    }),
+  };
+  res.json(campgroundsGeo);
+};
+
 module.exports.createCampground = async (req, res, next) => {
   if (req.files.length === 0) {
     throw new ExpressError("Please upload a file", 400);
