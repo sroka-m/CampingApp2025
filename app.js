@@ -10,6 +10,7 @@ const methodOverride = require("method-override");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const engine = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError");
@@ -41,7 +42,21 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
+
+//mongoUrl: dbUrl,
+const store = MongoStore.create({
+  mongoUrl: "mongodb://127.0.0.1:27017/yelpCamp",
+  touchAfter: 24 * 60 * 60,
+  crypto: {
+    secret: "thisshouldbeabettersecret!",
+  },
+});
+
+store.on("error", function (e) {
+  console.log("session store error", e);
+});
 const sessionConfig = {
+  store,
   name: "session",
   secret: "thismustbeBetterSecureKey",
   resave: false,
@@ -111,7 +126,9 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   if (
-    !["/login", "/register", "/"].includes(req.originalUrl) &&
+    !["/login", "/register", "/", "/campgrounds/API"].includes(
+      req.originalUrl
+    ) &&
     !req.originalUrl.includes("reviews")
   ) {
     req.session.returnTo = req.originalUrl;
