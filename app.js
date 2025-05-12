@@ -22,14 +22,12 @@ const User = require("./models/user");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-const dbUrl = process.env.DB_URL;
-
-// "mongodb://127.0.0.1:27017/yelpCamp"
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelpCamp";
 
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/yelpCamp");
+  await mongoose.connect(dbUrl);
   console.log("connection opened");
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
@@ -43,12 +41,14 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 
-//mongoUrl: dbUrl,
+const secret = process.env.SECRET || "thisshouldbeabettersecret!";
+
+//mongoUrl: "mongodb://127.0.0.1:27017/yelpCamp", for deployment
 const store = MongoStore.create({
-  mongoUrl: "mongodb://127.0.0.1:27017/yelpCamp",
+  mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,
   crypto: {
-    secret: "thisshouldbeabettersecret!",
+    secret,
   },
 });
 
@@ -58,12 +58,12 @@ store.on("error", function (e) {
 const sessionConfig = {
   store,
   name: "session",
-  secret: "thismustbeBetterSecureKey",
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
-    // secure: true,
+    secure: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: Date.now() + 1000 * 60 * 60 * 24 * 7,
   },
@@ -175,6 +175,8 @@ app.use((err, req, res, next) => {
   res.status(status).render("error", { err });
 });
 
-app.listen(3000, (req, res) => {
-  console.log("listening at 3000");
+const port = process.env.PORT || 3000;
+
+app.listen(port, (req, res) => {
+  console.log(`listening at ${port}`);
 });
