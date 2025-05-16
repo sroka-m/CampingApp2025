@@ -7,8 +7,7 @@ const mapkey = maptilerClient.config.apiKey;
 
 module.exports.index = async (req, res) => {
   const campgrounds = await Campground.find({});
-  let serverTime = new Date();
-  res.render("campgrounds/index", { campgrounds, serverTime });
+  res.render("campgrounds/index", { campgrounds });
 };
 
 module.exports.renderNewForm = (req, res) => {
