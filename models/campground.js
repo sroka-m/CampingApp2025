@@ -31,6 +31,7 @@ const CampgroundSchema = new Schema(
         required: true,
       },
     },
+    currDate: { type: Date },
     description: String,
     location: String,
     reviews: [

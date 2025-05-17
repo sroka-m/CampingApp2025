@@ -1,6 +1,7 @@
 const Campground = require("../models/campground");
 const { cloudinary } = require("../claudinary");
 const ExpressError = require("../utils/ExpressError");
+const dateDiffAprox = require("../utils/dateDiffAprox");
 const maptilerClient = require("@maptiler/client");
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 const mapkey = maptilerClient.config.apiKey;
@@ -59,6 +60,7 @@ module.exports.createCampground = async (req, res, next) => {
     filename: f.filename,
   }));
   campground.author = req.user._id;
+  campground.currDate = new Date();
   await campground.save();
   // console.log(campground);
   req.flash("success", "Successfuly created campground!");
@@ -74,7 +76,10 @@ module.exports.showCampground = async (req, res) => {
     req.flash("error", "Cannot find that campground!");
     return res.redirect("/campgrounds");
   }
-  res.render("campgrounds/show", { campground });
+  // const then = new Date("2025-05-10T05:48:21.396Z");
+  const then = new Date(campground.currDate);
+  const dateDiffCreated = dateDiffAprox(then);
+  res.render("campgrounds/show", { campground, dateDiffCreated });
 };
 
 module.exports.renderEditForm = async (req, res) => {
