@@ -22,12 +22,12 @@ const User = require("./models/user");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelpCamp";
+// const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelpCamp";
 
 main().catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect(dbUrl);
+  await mongoose.connect("mongodb://127.0.0.1:27017/yelpCamp");
   console.log("connection opened");
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
@@ -45,7 +45,8 @@ const secret = process.env.SECRET || "thisshouldbeabettersecret!";
 
 //mongoUrl: "mongodb://127.0.0.1:27017/yelpCamp", for deployment
 const store = MongoStore.create({
-  mongoUrl: dbUrl,
+  mongoUrl: "mongodb://127.0.0.1:27017/yelpCamp",
+  // mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,
   crypto: {
     secret,

@@ -8,6 +8,7 @@ const mapkey = maptilerClient.config.apiKey;
 
 module.exports.index = async (req, res) => {
   const campgrounds = await Campground.find({});
+  campgrounds.reverse();
   res.render("campgrounds/index", { campgrounds });
 };
 
@@ -76,10 +77,20 @@ module.exports.showCampground = async (req, res) => {
     req.flash("error", "Cannot find that campground!");
     return res.redirect("/campgrounds");
   }
+  campground.reviews.reverse();
+  let average;
+  if (campground.reviews.length > 0) {
+    average =
+      campground.reviews.reduce((total, review) => {
+        return total + review.rating;
+      }, 0) / campground.reviews.length;
+    average = average.toFixed(1);
+  }
+
   // const then = new Date("2025-05-10T05:48:21.396Z");
   const then = new Date(campground.currDate);
   const dateDiffCreated = dateDiffAprox(then);
-  res.render("campgrounds/show", { campground, dateDiffCreated });
+  res.render("campgrounds/show", { campground, dateDiffCreated, average });
 };
 
 module.exports.renderEditForm = async (req, res) => {
