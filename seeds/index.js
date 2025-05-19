@@ -29,6 +29,7 @@ const seedsDB = async () => {
           cities[random1000].latitude,
         ],
       },
+      currDate: new Date(),
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore cum minus, culpa debitis aliquam voluptatum incidunt quod. Placeat ipsa veritatis voluptate ex dignissimos repudiandae, asperiores earum, explicabo officia tempore error!",
       price,
