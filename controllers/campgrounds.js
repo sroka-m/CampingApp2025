@@ -132,7 +132,10 @@ module.exports.updateCampground = async (req, res) => {
     }
     throw new ExpressError("Total image count cannot exceed 4", 400);
   }
-  await campground.updateOne({ ...req.body.campground });
+  await campground.updateOne(
+    { ...req.body.campground },
+    { runValidators: true }
+  );
   const geoData = await maptilerClient.geocoding.forward(
     req.body.campground.location,
     { limit: 1 }
