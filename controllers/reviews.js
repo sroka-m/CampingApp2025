@@ -1,8 +1,10 @@
 const Campground = require("../models/campground");
 const Review = require("../models/review");
+const dateDiffAprox = require("../utils/dateDiffAprox");
 
 module.exports.indexReview = async (req, res) => {
   const { id } = req.params;
+  const { rating } = req.query;
   const campground = await Campground.findById(id)
     .populate({ path: "reviews", populate: { path: "author" } })
     .populate("author");
@@ -10,10 +12,22 @@ module.exports.indexReview = async (req, res) => {
     req.flash("error", "Cannot find that campground!");
     return res.redirect("/campgrounds");
   }
-  //i would need to sort them soon
-  //need to calc % for star reivews before i pull out the review made by the user, as it also contributes to the numbers
+
   campground.reviews.reverse();
-  // console.log(campground.reviews);
+
+  //need to calc % for star reivews and avg before pull out userReview from the reviews
+  //averageForStars, round up to 0.5 but integer.0 must be just integer (starability modified accepts only e.g. 1 and 1.5 but not 1.0)
+  let average;
+  let averageForStars;
+  if (campground.reviews.length > 0) {
+    average =
+      campground.reviews.reduce((total, review) => {
+        return total + review.rating;
+      }, 0) / campground.reviews.length;
+    averageForStars = Math.round(average * 2) / 2;
+    //first determine averageForStars using unrounded average then round the average for template (not much difference, but still)
+    average = average.toFixed(1);
+  }
   //only if the user is logged in, check if he already made a review
   let userReview;
   if (res.locals.currentUser) {
@@ -25,6 +39,13 @@ module.exports.indexReview = async (req, res) => {
       userReview = campground.reviews.splice(index, 1);
     }
   }
+  //if query then sort the camground.reviews by the # of stars once the userReview is spliced, thats why we dont pull from DB onlt the query rev, but everyting
+  if (rating) {
+    campground.reviews = campground.reviews.filter(function (review) {
+      return review.rating == Number(rating);
+    });
+  }
+  // console.log(campground.reviews);
 
   const starDesc = ["Terrible", "Not good", "Average", "Very good", "Amazing"];
 
@@ -34,6 +55,9 @@ module.exports.indexReview = async (req, res) => {
     title: campground.title,
     userReview,
     starDesc,
+    dateDiffAprox,
+    averageForStars,
+    average,
   });
 };
 
@@ -51,7 +75,7 @@ module.exports.createReview = async (req, res) => {
 
 module.exports.updateReview = async (req, res) => {
   const { id, reviewId } = req.params;
-
+  const campground = await Campground.findById(id);
   const review = await Review.findByIdAndUpdate(
     reviewId,
     {

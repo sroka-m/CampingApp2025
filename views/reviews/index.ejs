@@ -1,8 +1,61 @@
 <% layout('layouts/boilerplate') -%>
 <link rel="stylesheet" href="/stylesheets/starability.css" />
+<link rel="stylesheet" href="/stylesheets/starabilityHalf.css" />
 
 <div class="row">
-  <div class="col-sm-3">here goes the graph</div>
+  <div class="col-sm-3">
+    <%if(reviews.length || userReview){%>
+    <h5 class="mb-3">Customer reviews</h5>
+    <p class="mb-2"><%=average%> out of 5 stars</p>
+    <p class="starability-result mb-1" data-rating="<%=averageForStars%>">
+      Rated: <%=averageForStars%> stars
+    </p>
+    <small class="text-muted"
+      >(<%=userReview?reviews.length +1: reviews.length%> ratings)</small
+    >
+
+    <div>
+      <div>
+        <a
+          style="color: #f5bd23; font-size: 20px"
+          href="/campgrounds/<%=campgroundID%>/reviews?rating=1"
+          >&#9733;</a
+        >
+      </div>
+      <div>
+        <a
+          style="color: #f5bd23; font-size: 20px"
+          href="/campgrounds/<%=campgroundID%>/reviews?rating=2"
+          >&#9733;&#9733;</a
+        >
+      </div>
+      <div>
+        <a
+          style="color: #f5bd23; font-size: 20px"
+          href="/campgrounds/<%=campgroundID%>/reviews?rating=3"
+          >&#9733;&#9733;&#9733;</a
+        >
+      </div>
+      <div>
+        <a
+          style="color: #f5bd23; font-size: 20px"
+          href="/campgrounds/<%=campgroundID%>/reviews?rating=4"
+          >&#9733;&#9733;&#9733;&#9733;</a
+        >
+      </div>
+      <div>
+        <a
+          style="color: #f5bd23; font-size: 20px"
+          href="/campgrounds/<%=campgroundID%>/reviews?rating=5"
+          >&#9733;&#9733;&#9733;&#9733;&#9733;</a
+        >
+      </div>
+      <div>
+        <a href="/campgrounds/<%=campgroundID%>/reviews">All reviews</a>
+      </div>
+    </div>
+    <%}%>
+  </div>
   <div class="col-sm-6">
     <h4 class="mb-4">
       <a href="/campgrounds/<%=campgroundID%>"><%=title%></a>
@@ -97,6 +150,11 @@
           <div class="btn btn-sm btn-info btnShowRevUpdateFrom">Edit</div>
         </form>
       </div>
+      <div class="card-footer text-body-secondary">
+        <%=dateDiffAprox(new Date(userReview[0].createdAt))%>
+        <%=userReview[0].createdAt.valueOf() !=
+        userReview[0].updatedAt.valueOf()? "\(edited\)": ""%>
+      </div>
     </div>
     <div class="card mb-3 revUpdateFormCard hide">
       <div class="card-body">
@@ -190,6 +248,11 @@
           Rated: <%=review.rating%> stars
         </p>
         <p class="card-text">Review: <%=review.body%></p>
+      </div>
+      <div class="card-footer text-body-secondary">
+        <%=dateDiffAprox(new Date(review.createdAt))%>
+        <%=review.createdAt.valueOf() != review.updatedAt.valueOf()?
+        "\(edited\)": ""%>
       </div>
     </div>
     <%}%>

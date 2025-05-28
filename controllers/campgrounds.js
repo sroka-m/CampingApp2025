@@ -88,9 +88,14 @@ module.exports.showCampground = async (req, res) => {
   }
 
   // const then = new Date("2025-05-10T05:48:21.396Z");
-  const then = new Date(campground.currDate);
-  const dateDiffCreated = dateDiffAprox(then);
-  res.render("campgrounds/show", { campground, dateDiffCreated, average });
+  const dateDiffCreated = dateDiffAprox(new Date(campground.currDate));
+  // console.log(campground);
+  res.render("campgrounds/show", {
+    campground,
+    dateDiffCreated,
+    average,
+    dateDiffAprox,
+  });
 };
 
 module.exports.renderEditForm = async (req, res) => {

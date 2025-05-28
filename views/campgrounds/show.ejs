@@ -113,6 +113,11 @@
         </p>
         <p class="card-text">Review: <%=review.body%></p>
       </div>
+      <div class="card-footer text-body-secondary">
+        <%=dateDiffAprox(new Date(review.createdAt))%>
+        <%=review.createdAt.valueOf() != review.updatedAt.valueOf()?
+        "\(edited\)": ""%>
+      </div>
     </div>
     <%}%>
   </div>

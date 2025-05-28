@@ -5,9 +5,9 @@ const cities = require("./cities");
 const { descriptors, places } = require("./seedHelpers");
 
 main().catch((err) => console.log(err));
-
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/yelpCamp");
+  //NOTE: AFTER MONGO.NET/ IN THE URL U NEED TO SPECIFY THE NAME OF THE DB, FOR THIS APP "tEST", .env DB_URL_SEEDING
+  await mongoose.connect(" //mongodb://127.0.0.1:27017/scriptTest");
   console.log("connection opened");
   // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
