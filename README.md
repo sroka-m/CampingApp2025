@@ -18,7 +18,7 @@
 
 ### Campgrounds and reviews show a number of days, weeks, months, or years from when they were created (implemented in routing files so the time is taken from the server where the app is rendered and not from the user's hardware). Reviews marked if edited. Created review partial.
 
-### Raised review resource to a separate route. Edit review added, so that reviews also have full CRUD. Different elements are displayed depending on whether a campground has any reviews, whether a user is logged in, if a logged-in user has already left a review. Only a single review is permitted per user.  
+### Raised review resource to a separate route. Edit review added, so that reviews also have full CRUD. Different elements are displayed depending on whether a campground has any reviews, whether a user is logged in, if a logged-in user has already left a review. Only a single review is permitted per user. Added a custom FE validation for stars input, in the original project, when no stars were selected, it defaulted to 1.
 
 ### Reviews are sorted by number of stars.
 
@@ -32,6 +32,8 @@
 
 ### The ability to display half stars was added by coping \_starability-base.scss, \_starability-result.scss, \_variables.scss, starability/basic.scss, modifying \_starability-result.scss according to solution https://github.com/LunarLogic/starability/issues/26#issuecomment-367013528 and recompiling with node-sass (starabilityHalf.css). There is one script for integer values and one for haf values. This probably repeats some code but I do not feel I have the luxury of time to dig deeper and understand how the library works.
 
+### Multer file type validation is mimetype based. It would be more secure using magic numbers (file-type, ESM package)
+
 #### Multer 1.xxx: when the number of images are exceeded using ( upload.array("image", 4)), it gives an error "Unexpected field". I had to overwrite this error in app.use app.js. Issue https://github.com/expressjs/multer/issues/1057 (it is apparently fixed in Multer 2.xx but it's not properly out yet).
 
-### Preventing upload to Cloudinary when req.body fails is not implemented elegantly (according to solution https://github.com/expressjs/multer/issues/150  validation inside multer fileFilter callback, ). Before that solution I validated using middleware in a router, so I could either validate req.body first or req.files, for instance: router.VERB("/PATH",someMiddleware, validateJoiSchema(reviewSchema), upload.array("image")). Possible solution: pechkin https://www.npmjs.com/package/pechkin.
+### Preventing upload to Cloudinary when req.body fails is not implemented elegantly (according to solution https://github.com/expressjs/multer/issues/150  validation inside multer fileFilter callback, ). Before that solution I validated using middleware in a router, so I could either validate req.body first or req.files, for instance: router.VERB("/PATH",someMiddleware, validateJoiSchema(campgroundSchema), upload.array("image")). Possible solution: pechkin https://www.npmjs.com/package/pechkin.

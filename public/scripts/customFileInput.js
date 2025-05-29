@@ -44,13 +44,15 @@ function updateImagePreview() {
         fragmentImages.append(div);
       }
     } else if (i === 4) {
-      // console.log("cannot exceed more than 4 pictures");
       const p = document.createElement("p");
       p.textContent = "Total number of images displayed cannot exceed 4.";
       fragmentErrors.append(p);
     }
   });
   fileInputPreview.append(fragmentImages);
+
+  //////////////////////////////////////////////
+  //OLD CODE BLOCK
   // for (const file of fileInputImages.files) {
   //   if (!validFileType(file)) {
   //     invalidTypeMsg.push(file.name);
@@ -70,6 +72,7 @@ function updateImagePreview() {
   //     fragment.append(div);
   //   }
   // }
+  //////////////////////////////////////////
 
   if (invalidTypeMsg.length !== 0) {
     const p = document.createElement("p");

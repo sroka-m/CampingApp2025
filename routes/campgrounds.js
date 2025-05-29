@@ -25,12 +25,25 @@ const fileFilter = (req, file, cb) => {
       false
     );
   }
+  // Check if the file is an image with the allowed extensions
+  const allowedFormats = ["image/jpeg", "image/jpg", "image/png"];
+  if (!allowedFormats.includes(file.mimetype)) {
+    cb(
+      new ExpressError(
+        `only files of mimetype ${allowedFormats.join(",")} are allowed`,
+        400
+      ),
+      false
+    );
+  }
+
   cb(null, true);
 };
 const upload = multer({
   fileFilter,
   limits: { fileSize: MAXFILESIZE },
   storage: storage,
+  //does not work, as the issu shows https://github.com/affanshahid/multer-storage-cloudinary/issues/40
   // fileFilter: (req, file, cb) => {
   //   if (!allowedFormats.includes(file.mimetype)) {
   //     cb(new ExpressError("only jpeg/png/jpg images allowed!", 400));
