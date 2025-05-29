@@ -86,6 +86,10 @@ module.exports.showCampground = async (req, res) => {
       }, 0) / campground.reviews.length;
     average = average.toFixed(1);
   }
+  //only recent reviews displayed,
+  if (campground.reviews.length >= 4) {
+    campground.reviews = campground.reviews.slice(0, 3);
+  }
 
   // const then = new Date("2025-05-10T05:48:21.396Z");
   const dateDiffCreated = dateDiffAprox(new Date(campground.currDate));

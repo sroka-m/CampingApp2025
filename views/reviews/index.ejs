@@ -72,6 +72,8 @@
         class="mb-3 needs-validation"
         novalidate
       >
+        <!-- required on all or any input fields does not work, "checked" on first input class="input-no-rate" is needed, 
+         otherwise all 5 stars are originally filled-->
         <div>
           <fieldset class="starability-basic">
             <input
@@ -79,7 +81,6 @@
               id="no-rate"
               class="input-no-rate"
               name="review[rating]"
-              value="1"
               checked
               aria-label="No rating."
             />
@@ -116,8 +117,10 @@
               id="first-rate5"
               name="review[rating]"
               value="5"
+              required
             />
             <label for="first-rate5" title="Amazing">5 stars</label>
+            <div class="invalid-feedback">Please select stars 1 to 5</div>
           </fieldset>
         </div>
         <div class="mb-3">
@@ -174,9 +177,9 @@
                 aria-label="No rating."
               />
               <%for(let j = 1; j<=5; j++ ){%> <input type="radio"
-              id="first-rate<%=j%>" name="review[rating]" value="<%=j%>"
+              id="edit-rate<%=j%>" name="review[rating]" value="<%=j%>"
               <%=userReview[0].rating == j?"checked" : ""%> />
-              <label for="first-rate<%=j%>" title="<%=starDesc[j]-1%>"
+              <label for="edit-rate<%=j%>" title="<%=starDesc[j]-1%>"
                 ><%=j%> star</label
               >
               <%}%>
@@ -240,22 +243,8 @@
     <div class="mb-4">
       <a href="/login" class="btn btn-success btn-lg">Leave a review</a>
     </div>
-    <%}%> <%for(let review of reviews){%>
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title"><%=review.author.username%></h5>
-        <p class="starability-result" data-rating="<%=review.rating%>">
-          Rated: <%=review.rating%> stars
-        </p>
-        <p class="card-text">Review: <%=review.body%></p>
-      </div>
-      <div class="card-footer text-body-secondary">
-        <%=dateDiffAprox(new Date(review.createdAt))%>
-        <%=review.createdAt.valueOf() != review.updatedAt.valueOf()?
-        "\(edited\)": ""%>
-      </div>
-    </div>
-    <%}%>
+    <%}%> <%for(let review of reviews){%> <%-include("../partials/review",
+    {review})%> <%}%>
   </div>
 </div>
 <script>

@@ -16,7 +16,7 @@
 
 ### Made an API call to backend to fetch the location of all campgrounds for the map cluster. In the original project, this was done by using ejs <%-%> tag and json.stringify (frontend was getting the locations from backend as a variable). As a result, the list of all campgrounds was visible in the browser, together with users who created it and their credentials.
 
-### Campgrounds and reviews show a number of days, weeks, months, or years from when they were created (implemented in routing files so the time is taken from the server where the app is rendered and not from the user's hardware). Reviews marked if edited.
+### Campgrounds and reviews show a number of days, weeks, months, or years from when they were created (implemented in routing files so the time is taken from the server where the app is rendered and not from the user's hardware). Reviews marked if edited. Created review partial.
 
 ### Raised review resource to a separate route. Edit review added, so that reviews also have full CRUD. Different elements are displayed depending on whether a campground has any reviews, whether a user is logged in, if a logged-in user has already left a review. Only a single review is permitted per user.  
 

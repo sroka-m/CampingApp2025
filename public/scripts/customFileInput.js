@@ -95,6 +95,6 @@ function validFileType(file) {
 }
 
 function valiadateFileSize(file) {
-  console.log(file.size);
+  // console.log(file.size);
   return file.size < MAXFILESIZE ? true : false;
 }
