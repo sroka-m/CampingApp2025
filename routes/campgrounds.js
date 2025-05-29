@@ -28,7 +28,7 @@ const fileFilter = (req, file, cb) => {
   // Check if the file is an image with the allowed extensions
   const allowedFormats = ["image/jpeg", "image/jpg", "image/png"];
   if (!allowedFormats.includes(file.mimetype)) {
-    cb(
+    return cb(
       new ExpressError(
         `only files of mimetype ${allowedFormats.join(",")} are allowed`,
         400

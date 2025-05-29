@@ -13,7 +13,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "YelpCamp",
-    // allowedFormats: ["jpeg", "png", "jpg"], //does not work, issue https://github.com/affanshahid/multer-storage-cloudinary/issues/40
+    // allowedFormats: ["jpeg", "png", "jpg"], //does not seem to work,
     //using format with callback works (below), but i want to have all/most of image valiadaiotn in one place, routes/camp (filefilter)
     // format: async (req, file) => {
     //   if (!allowedFormats.includes(file.mimetype)) {
