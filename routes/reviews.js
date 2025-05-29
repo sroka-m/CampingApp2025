@@ -9,18 +9,20 @@ const {
   isReviewAuthor,
 } = require("../middleware");
 
-router.delete(
-  "/:reviewId",
-  isLoggedIn,
-  isReviewAuthor,
-  catchAsync(reviews.deleteReview)
-);
+//prefix /campgrounds/:id/reviews"
 
-router.post(
-  "/",
-  isLoggedIn,
-  validateJoiSchema(reviewSchema),
-  catchAsync(reviews.createReview)
-);
+router
+  .route("/:reviewId")
+  .patch(isLoggedIn, isReviewAuthor, catchAsync(reviews.updateReview))
+  .delete(isLoggedIn, isReviewAuthor, catchAsync(reviews.deleteReview));
+
+router
+  .route("/")
+  .get(catchAsync(reviews.indexReview))
+  .post(
+    isLoggedIn,
+    validateJoiSchema(reviewSchema),
+    catchAsync(reviews.createReview)
+  );
 
 module.exports = router;

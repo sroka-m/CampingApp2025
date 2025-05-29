@@ -126,15 +126,35 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
+  // console.log("before the session");
+  // console.log(req.originalUrl);
+  //i had to put the "/campgrounds/API" last, othersie the path is expected to send json, chrome complains, i think its a bug
+  // req.originalUrl is .well-known/appspecific/com.chrome.devtools.json
   if (
-    !["/login", "/register", "/", "/campgrounds/API"].includes(
-      req.originalUrl
-    ) &&
-    !req.originalUrl.includes("reviews")
+    ![
+      "/login",
+      "/register",
+      "/",
+      "/campgrounds/:id/reviews/:reviewId",
+      "/campgrounds/API",
+    ].includes(req.originalUrl)
   ) {
+    // console.log("in the session");
     req.session.returnTo = req.originalUrl;
+    // console.log(req.originalUrl);
     // console.log(req.session.returnTo);
   }
+
+  ////////////////////////////////////////////////////////////////////
+  // if (
+  //   !["/login", "/register", "/", "/campgrounds/API"].includes(
+  //     req.originalUrl
+  //   ) &&
+  //   !req.originalUrl.includes("reviews")
+  // ) {
+  //   req.session.returnTo = req.originalUrl;
+  //   // console.log(req.session.returnTo);
+  // }
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");

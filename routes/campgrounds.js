@@ -17,6 +17,7 @@ const MAXFILESIZE = 1024 ** 2 * 3;
 //cannot use validateJoiSchema and pass the campgroundSchema becase i need to do adhere to the format required by the fileFilter
 //with fileFilter in place when req.body is rejected, pics wont be added to cloudinary, it must be return cb, or else does not work
 const fileFilter = (req, file, cb) => {
+  //.validate is JOI function
   const { error } = campgroundSchema.validate(req.body, { abortEarly: false });
   if (error) {
     return cb(

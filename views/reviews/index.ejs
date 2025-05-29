@@ -1,0 +1,269 @@
+<% layout('layouts/boilerplate') -%>
+<link rel="stylesheet" href="/stylesheets/starability.css" />
+<link rel="stylesheet" href="/stylesheets/starabilityHalf.css" />
+
+<div class="row">
+  <div class="col-sm-3">
+    <%if(reviews.length || userReview){%>
+    <h5 class="mb-3">Customer reviews</h5>
+    <p class="mb-2"><%=average%> out of 5 stars</p>
+    <p class="starability-result mb-1" data-rating="<%=averageForStars%>">
+      Rated: <%=averageForStars%> stars
+    </p>
+    <small class="text-muted"
+      >(<%=userReview?reviews.length +1: reviews.length%> ratings)</small
+    >
+
+    <div>
+      <div>
+        <a
+          style="color: #f5bd23; font-size: 20px"
+          href="/campgrounds/<%=campgroundID%>/reviews?rating=1"
+          >&#9733;</a
+        >
+      </div>
+      <div>
+        <a
+          style="color: #f5bd23; font-size: 20px"
+          href="/campgrounds/<%=campgroundID%>/reviews?rating=2"
+          >&#9733;&#9733;</a
+        >
+      </div>
+      <div>
+        <a
+          style="color: #f5bd23; font-size: 20px"
+          href="/campgrounds/<%=campgroundID%>/reviews?rating=3"
+          >&#9733;&#9733;&#9733;</a
+        >
+      </div>
+      <div>
+        <a
+          style="color: #f5bd23; font-size: 20px"
+          href="/campgrounds/<%=campgroundID%>/reviews?rating=4"
+          >&#9733;&#9733;&#9733;&#9733;</a
+        >
+      </div>
+      <div>
+        <a
+          style="color: #f5bd23; font-size: 20px"
+          href="/campgrounds/<%=campgroundID%>/reviews?rating=5"
+          >&#9733;&#9733;&#9733;&#9733;&#9733;</a
+        >
+      </div>
+      <div>
+        <a href="/campgrounds/<%=campgroundID%>/reviews">All reviews</a>
+      </div>
+    </div>
+    <%}%>
+  </div>
+  <div class="col-sm-6">
+    <h4 class="mb-4">
+      <a href="/campgrounds/<%=campgroundID%>"><%=title%></a>
+    </h4>
+
+    <%if(currentUser){%> <%if(userReview === undefined){%>
+    <!-- person is logged in, index is -1 and hence userReview is still undefined, perosn has not made a review  -->
+    <hr class="my-1" />
+    <div class="mb-4">
+      <h5>Leave a Review</h5>
+      <form
+        method="post"
+        action="/campgrounds/<%=campgroundID%>/reviews"
+        class="mb-3 needs-validation"
+        novalidate
+      >
+        <!-- required on all or any input fields does not work, "checked" on first input class="input-no-rate" is needed, 
+         otherwise all 5 stars are originally filled-->
+        <div>
+          <fieldset class="starability-basic">
+            <input
+              type="radio"
+              id="no-rate"
+              class="input-no-rate"
+              name="review[rating]"
+              checked
+              aria-label="No rating."
+            />
+            <input
+              type="radio"
+              id="first-rate1"
+              name="review[rating]"
+              value="1"
+            />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input
+              type="radio"
+              id="first-rate2"
+              name="review[rating]"
+              value="2"
+            />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input
+              type="radio"
+              id="first-rate3"
+              name="review[rating]"
+              value="3"
+            />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input
+              type="radio"
+              id="first-rate4"
+              name="review[rating]"
+              value="4"
+            />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input
+              type="radio"
+              id="first-rate5"
+              name="review[rating]"
+              value="5"
+              required
+            />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+            <div class="invalid-feedback">Please select stars 1 to 5</div>
+          </fieldset>
+        </div>
+        <div class="mb-3">
+          <label for="body" class="form-label">Review Text</label>
+          <textarea
+            class="form-control"
+            name="review[body]"
+            id="body"
+            rows="3"
+            required
+          ></textarea>
+          <div class="valid-feedback">Looks good!</div>
+        </div>
+        <button class="btn btn-success" type="submit">Submit</button>
+      </form>
+    </div>
+    <%}else{%>
+    <div class="card mb-3 userReview">
+      <div class="card-body">
+        <h5 class="card-title"><%=userReview[0].author.username%></h5>
+        <p class="starability-result" data-rating="<%=userReview[0].rating%>">
+          Rated: <%=userReview[0].rating%> stars
+        </p>
+        <p class="card-text">Review: <%=userReview[0].body%></p>
+        <form
+          action="/campgrounds/<%=campgroundID%>/reviews/<%=userReview[0]._id%>?_method=DELETE"
+          method="post"
+        >
+          <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+          <div class="btn btn-sm btn-info btnShowRevUpdateFrom">Edit</div>
+        </form>
+      </div>
+      <div class="card-footer text-body-secondary">
+        <%=dateDiffAprox(new Date(userReview[0].createdAt))%>
+        <%=userReview[0].createdAt.valueOf() !=
+        userReview[0].updatedAt.valueOf()? "\(edited\)": ""%>
+      </div>
+    </div>
+    <div class="card mb-3 revUpdateFormCard hide">
+      <div class="card-body">
+        <form
+          method="post"
+          action="/campgrounds/<%=campgroundID%>/reviews/<%=userReview[0]._id%>?_method=PATCH"
+          class="mb-3 needs-validation"
+          novalidate
+        >
+          <div>
+            <fieldset class="starability-basic">
+              <input
+                type="radio"
+                id="no-rate"
+                class="input-no-rate"
+                name="review[rating]"
+                aria-label="No rating."
+              />
+              <%for(let j = 1; j<=5; j++ ){%> <input type="radio"
+              id="edit-rate<%=j%>" name="review[rating]" value="<%=j%>"
+              <%=userReview[0].rating == j?"checked" : ""%> />
+              <label for="edit-rate<%=j%>" title="<%=starDesc[j]-1%>"
+                ><%=j%> star</label
+              >
+              <%}%>
+
+              <!-- <input
+                type="radio"
+                id="first-rate1"
+                name="review[rating]"
+                value="1"
+              />
+              <label for="first-rate1" title="Terrible">1 star</label>
+              <input
+                type="radio"
+                id="first-rate2"
+                name="review[rating]"
+                value="2"
+              />
+              <label for="first-rate2" title="Not good">2 stars</label>
+              <input
+                type="radio"
+                id="first-rate3"
+                name="review[rating]"
+                value="3"
+              />
+              <label for="first-rate3" title="Average">3 stars</label>
+              <input
+                type="radio"
+                id="first-rate4"
+                name="review[rating]"
+                value="4"
+              />
+              <label for="first-rate4" title="Very good">4 stars</label>
+              <input
+                type="radio"
+                id="first-rate5"
+                name="review[rating]"
+                value="5"
+              />
+              <label for="first-rate5" title="Amazing">5 stars</label> -->
+            </fieldset>
+          </div>
+          <div class="mb-3">
+            <label for="body" class="form-label">Review Text</label>
+            <textarea
+              class="form-control"
+              name="review[body]"
+              id="body"
+              rows="3"
+              required
+            >
+<%=userReview[0].body%></textarea
+            >
+            <div class="valid-feedback">Looks good!</div>
+          </div>
+          <button class="btn btn-success" type="submit">Update</button>
+          <div class="btn btn-danger btnCancelRevUpdateFrom">Cancel</div>
+        </form>
+      </div>
+    </div>
+    <%}%> <%}else{%>
+    <div class="mb-4">
+      <a href="/login" class="btn btn-success btn-lg">Leave a review</a>
+    </div>
+    <%}%> <%for(let review of reviews){%> <%-include("../partials/review",
+    {review})%> <%}%>
+  </div>
+</div>
+<script>
+  const btnShowRevUpdateFrom = document.querySelector(".btnShowRevUpdateFrom");
+  const btnCancelRevUpdateFrom = document.querySelector(
+    ".btnCancelRevUpdateFrom"
+  );
+  const revUpdateFormCard = document.querySelector(".revUpdateFormCard");
+  const userReview = document.querySelector(".userReview");
+  if (btnShowRevUpdateFrom) {
+    btnShowRevUpdateFrom.addEventListener("click", () => {
+      revUpdateFormCard.classList.remove("hide");
+      userReview.classList.add("hide");
+    });
+  }
+  if (btnCancelRevUpdateFrom) {
+    btnCancelRevUpdateFrom.addEventListener("click", () => {
+      revUpdateFormCard.classList.add("hide");
+      userReview.classList.remove("hide");
+    });
+  }
+</script>
