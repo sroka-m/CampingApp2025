@@ -1,5 +1,7 @@
 const BaseJoi = require("joi");
 const sanitizeHtml = require("sanitize-html");
+const ExpressError = require("./utils/ExpressError");
+const User = require("./models/user");
 
 const extension = (joi) => ({
   type: "string",
@@ -24,6 +26,43 @@ const extension = (joi) => ({
 
 const Joi = BaseJoi.extend(extension);
 
+const commonPassArr = [
+  "yelpcamp",
+  "1234567890",
+  "password1",
+  "passw0rd1",
+  "123456789",
+  "12345678",
+  "password",
+  "passw0rd",
+  "qwerty123",
+  "1qaz2wsx",
+  "zaq1zaq1",
+  "iloveyou",
+  "1q2w3e4r",
+  "qwertyuiop",
+  "!@#$%^*(",
+  "!@#$%^*()",
+  "princess",
+  "1q2w3e4r5t",
+];
+
+const commonPasswords = (value, helpers) => {
+  for (let i = 0; i < commonPassArr.length; i++) {
+    if (value.toLowerCase() === commonPassArr[i]) {
+      throw new ExpressError("Common passwords are no accepted", 400);
+    }
+  }
+};
+const notTaken = async (value, hepers) => {
+  const users = await User.find({});
+  users.map((u) => {
+    if (u.username === value) {
+      throw new ExpressError("Username already taken", 400);
+    }
+  });
+};
+
 module.exports.campgroundSchema = Joi.object({
   campground: Joi.object({
     title: Joi.string().required().escapeHTML(),
@@ -45,16 +84,19 @@ module.exports.reviewSchema = Joi.object({
 //joi validation does not like \d for numbers
 module.exports.userSchema = Joi.object({
   username: Joi.string()
-    .pattern(new RegExp("^[a-zA-Z0-9]{6,20}$"))
-    .required()
-    .escapeHTML(),
+    .pattern(new RegExp("^(?=^\\S)(?=.*\\S$)[a-zA-Z0-9]{6,20}$"))
+    .escapeHTML()
+    .external(notTaken, "custom validation")
+    .required(),
   email: Joi.string().email({ minDomainSegments: 2 }).required().escapeHTML(),
   password: Joi.string()
     .pattern(
       new RegExp(
-        "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%^!?,])[a-zA-Z0-9@#$%^!?,]{6,20}$"
+        "^(?=^\\S)(?=.*\\S$)(?=^.{8,64}$)(?=^(?:(?!<).)*$)(?=^(?:(?!>).)*$)(?=^(?:(?!&).)*$).*$"
       )
     )
-    .required()
-    .escapeHTML(),
+    .escapeHTML()
+    .custom(commonPasswords, "custom validation")
+    .not(Joi.ref("username"))
+    .required(),
 }).required();

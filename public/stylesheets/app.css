@@ -9,10 +9,6 @@
   margin-bottom: 1rem;
 }
 
-.hide {
-  display: none;
-}
-
 /* #fileInputError {
   color: red;
 } */
@@ -37,4 +33,24 @@
 }
 .tooltip .tooltip-arrow::before {
   --bs-tooltip-bg: #4d8bb7;
+}
+
+/* password eye toggle  */
+#passwordContainer {
+  position: relative;
+}
+#showPassword,
+#hidePassword {
+  position: absolute;
+  top: 15%;
+  right: 4%;
+  color: grey;
+}
+
+.hide {
+  display: none;
+}
+/* need to swith off bootstrap green tick on the password field */
+#password {
+  background-image: none !important;
 }

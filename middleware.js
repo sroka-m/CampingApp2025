@@ -72,6 +72,21 @@ module.exports.validateJoiSchema = (schamaToValidate) => {
 //   }
 // };
 
+module.exports.validateUserAsync = async (req, res, next) => {
+  //joi schema acts before data is saved to mongo
+  // try {
+  const { error } = await userSchema.validateAsync(req.body);
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(",");
+    throw new ExpressError(msg, 400);
+  } else {
+    next();
+  }
+  // } catch (err) {
+  //   console.log(err);
+  // }
+};
+
 module.exports.isAuthor = async (req, res, next) => {
   const { id } = req.params;
   const campground = await Campground.findById(id);
