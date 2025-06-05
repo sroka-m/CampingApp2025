@@ -19,6 +19,7 @@
           <form
             class="needs-validation"
             action="/register"
+            id="register"
             method="post"
             novalidate
           >
@@ -31,7 +32,7 @@
                 data-bs-title="<p> Username must:</p>
         <ul>
           <li>contain only letters or numbers</li>
-          <li>Be between 6 and 20 characters long</li>
+          <li>be between 6 and 20 characters long</li>
         </ul>"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -52,6 +53,7 @@
                 autofocus
               />
               <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback" id="usernameTakenError"></div>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
@@ -69,13 +71,13 @@
               <svg
                 data-bs-toggle="tooltip"
                 data-bs-html="true"
-                data-bs-title="<p> Password must contain at least:</p>
+                data-bs-title="<p> Password must:</p>
             <ul>
-              <li>one upper case letter</li>
-              <li>one lower case letter</li>
-              <li>one number</li>
-              <li>one special character from the following: @#$%^?,!</li>
-              <li>Be between 6 and 20 characters long</li>
+              <li>be at least 8 characters long</li>
+              <li>cannot be the same as the username</li>
+              <li>cannot be set to: yelpcamp, or a common password e.g. password</li>
+              <li>might contain special characters except &, < or > </li>
+              <li>spaces not allowed at the beginnig or end</li>
             </ul>"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -137,3 +139,4 @@
   </div>
 </div>
 <script src="/scripts/showPassword.js"></script>
+<script src="/scripts/customRegister.js"></script>

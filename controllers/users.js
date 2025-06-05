@@ -4,6 +4,24 @@ module.exports.renderRegister = (req, res) => {
   res.render("users/register");
 };
 
+module.exports.checkExistingUsers = async (req, res, next) => {
+  try {
+    let { username } = req.query;
+    console.log(req.query);
+    let response = { alreadyTaken: false };
+    const users = await User.find({});
+    for (let u of users) {
+      if (u.username === username) {
+        response.alreadyTaken = true;
+        break;
+      }
+    }
+    res.json(response);
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports.register = async (req, res, next) => {
   try {
     const { email, username, password } = req.body;

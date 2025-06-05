@@ -137,6 +137,7 @@ app.use((req, res, next) => {
       "/",
       "/campgrounds/:id/reviews/:reviewId",
       "/campgrounds/API",
+      "/checkExistingUsers/API",
     ].includes(req.originalUrl)
   ) {
     // console.log("in the session");

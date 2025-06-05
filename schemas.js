@@ -56,11 +56,11 @@ const commonPasswords = (value, helpers) => {
 };
 const notTaken = async (value, hepers) => {
   const users = await User.find({});
-  users.map((u) => {
+  for (let u of users) {
     if (u.username === value) {
       throw new ExpressError("Username already taken", 400);
     }
-  });
+  }
 };
 
 module.exports.campgroundSchema = Joi.object({
@@ -84,7 +84,7 @@ module.exports.reviewSchema = Joi.object({
 //joi validation does not like \d for numbers
 module.exports.userSchema = Joi.object({
   username: Joi.string()
-    .pattern(new RegExp("^(?=^\\S)(?=.*\\S$)[a-zA-Z0-9]{6,20}$"))
+    .pattern(new RegExp("^[a-zA-Z0-9]{6,20}$"))
     .escapeHTML()
     .external(notTaken, "custom validation")
     .required(),

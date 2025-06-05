@@ -28,6 +28,7 @@ router
     }),
     users.login
   );
+router.route("/checkExistingUsers/API").get(users.checkExistingUsers);
 
 router.get("/logout", users.logout);
 
