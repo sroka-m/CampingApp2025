@@ -32,8 +32,10 @@ Password: restricted by regex: 8-64 length, ASCII printable characters allowed, 
 Password cannot be the same as username (JOI validation)
 Password checked against common passwords (see ToDos section, where I elaborate on how it could be improved)
 Username: 6-20 alphanumeric characters, cannot be set to a username that already exists in the database (JOI .external used).
+The corresponding validation added to the front end for smoother user expericence.
 
 - Added show/hide password feature.
+- Added password generator.
 
 ---
 
@@ -47,10 +49,14 @@ Username: 6-20 alphanumeric characters, cannot be set to a username that already
 
 - Preventing upload to Cloudinary when req.body fails is not implemented elegantly (according to solution https://github.com/expressjs/multer/issues/150  validation inside multer fileFilter callback, ). Before that solution I validated using middleware in a router, so I could either validate req.body first or req.files, for instance: router.VERB("/PATH",someMiddleware, validateJoiSchema(campgroundSchema), upload.array("image")). Possible solution: pechkin https://www.npmjs.com/package/pechkin.
 
+-Tooltips lost their custom styles; I am not sure when exactly, but I think it was after I expanded the FE validation. However, the styles work if they are embedded directly into the register form.
+Additionally, #passwordContainer has to be set to relative in both app.css AND through the bootstrap class. Otherwise, the eye icon is set relative to the main. This is irrational/buggy and I am worried that I added so much stuff that bootstrap gets wired bugs. Initially, it was working fine, I think this happened after I removed password generator script to a separate file.
+
 ### Todo's
 
 - To use file-type, ESM package to validate file type based on magc numbers
 - To extend the array with passwords that are not safe to use. There are 100,000 passwords at https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.json. When filtered for words with a length greater than or equal to 8, the number decreases by half. However, even after minification, the file is 500kB. Using the jsonminify npm package, removed the quotes around words and the outer []. The size dropped to 100kB but I am still unsure if it would be a good idea to run a search against an array 40k long.
+- I might add FE validation to check common passwords, but I would need to make another API and I already done it a few times.
 
 ### Notes about the code
 

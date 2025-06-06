@@ -1,7 +1,14 @@
 const User = require("../models/user");
+const generator = require("generate-password");
 
 module.exports.renderRegister = (req, res) => {
-  res.render("users/register");
+  const password = generator.generate({
+    length: 25, // defaults to 10
+    numbers: true, // defaults to false
+    symbols: true, // defaults to false
+    exclude: "<>&",
+  });
+  res.render("users/register", { password });
 };
 
 module.exports.checkExistingUsers = async (req, res, next) => {
