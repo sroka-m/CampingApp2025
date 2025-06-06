@@ -54,6 +54,7 @@
         <a href="/campgrounds/<%=campgroundID%>/reviews">All reviews</a>
       </div>
     </div>
+    <canvas id="myChart"></canvas>
     <%}%>
   </div>
   <div class="col-sm-6">
@@ -266,4 +267,32 @@
       userReview.classList.remove("hide");
     });
   }
+</script>
+<script
+  crossorigin="anonymous"
+  src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
+></script>
+<script>
+  const ctx = document.getElementById("myChart");
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["5 star", "4 star", "3 star", "2 star", "1 star"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [12, 19, 3, 5, 2, 3],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
 </script>

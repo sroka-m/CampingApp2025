@@ -49,8 +49,9 @@ The corresponding validation added to the front end for smoother user expericenc
 
 - Preventing upload to Cloudinary when req.body fails is not implemented elegantly (according to solution https://github.com/expressjs/multer/issues/150  validation inside multer fileFilter callback, ). Before that solution I validated using middleware in a router, so I could either validate req.body first or req.files, for instance: router.VERB("/PATH",someMiddleware, validateJoiSchema(campgroundSchema), upload.array("image")). Possible solution: pechkin https://www.npmjs.com/package/pechkin.
 
--Tooltips lost their custom styles; I am not sure when exactly, but I think it was after I expanded the FE validation. However, the styles work if they are embedded directly into the register form.
-Additionally, #passwordContainer has to be set to relative in both app.css AND through the bootstrap class. Otherwise, the eye icon is set relative to the main. This is irrational/buggy and I am worried that I added so much stuff that bootstrap gets wired bugs. Initially, it was working fine, I think this happened after I removed password generator script to a separate file.
+- Tooltips lost their custom styles; I am not sure when exactly, but I think it was after I expanded the FE validation. However, the styles work if they are embedded directly into the register form.
+  Additionally, #passwordContainer has to be set to relative in both app.css AND through the bootstrap class. Otherwise, the eye icon is set relative to the main. This is irrational/buggy and I am worried that I added so much custom stuff that bootstrap gets wired bugs. Initially, it was working fine, I think this happened after I removed password generator script to a separate file.
+- In SessionConfig (app.js) secure: true, the session does not work in development or when deployed
 
 ### Todo's
 

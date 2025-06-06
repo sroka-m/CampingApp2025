@@ -19,7 +19,7 @@ usernameInput.addEventListener("input", async () => {
         `/checkExistingUsers/API?username=${usernameInput.value}`
       );
       const data = await res.json();
-      console.log(data.alreadyTaken);
+      // console.log(data.alreadyTaken);
       if (data.alreadyTaken) {
         usernameTakenError.textContent = "Username already taken";
         usernameInput.setCustomValidity("Username already taken");
