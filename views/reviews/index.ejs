@@ -292,6 +292,7 @@
             ],
             borderWidth: 1,
             backgroundColor: "#F5BD23",
+            hoverBackgroundColor: "#DBA20A",
             borderColor: "#F5BD23",
             borderSkipped: false,
             borderRadius: {
@@ -301,7 +302,7 @@
             datalabels: {
               anchor: "start",
               align: "end",
-              offset: 255,
+              // offset: 255, this is set as fn in plugings.datalabells
             },
           },
           {
@@ -363,10 +364,11 @@
       },
       options: {
         // responsive: true,
+        // animation: false, this disables animation but i  think i like it
         aspectRatio: 1.6,
         layout: {
           padding: {
-            right: 30,
+            right: 40,
           },
         },
         indexAxis: "y",
@@ -384,6 +386,9 @@
             },
             font: {
               size: 14,
+            },
+            offset: function (context) {
+              return context.chart.chartArea.width;
             },
           },
           legend: {
