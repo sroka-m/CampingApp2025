@@ -10,7 +10,7 @@ module.exports = (then) => {
   //   const then = new Date("2025-05-10T18:48:21.396Z");
 
   let difference = now - then;
-  console.log(difference);
+  // console.log(difference);
 
   const time = [{ year }, { month }, { day }];
 

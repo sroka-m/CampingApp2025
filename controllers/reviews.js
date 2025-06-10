@@ -19,14 +19,35 @@ module.exports.indexReview = async (req, res) => {
   //averageForStars, round up to 0.5 but integer.0 must be just integer (starability modified accepts only e.g. 1 and 1.5 but not 1.0)
   let average;
   let averageForStars;
-  if (campground.reviews.length > 0) {
+  let numOfReviews = campground.reviews.length;
+  const ratingPercent = {};
+  if (numOfReviews > 0) {
     average =
       campground.reviews.reduce((total, review) => {
         return total + review.rating;
-      }, 0) / campground.reviews.length;
+      }, 0) / numOfReviews;
     averageForStars = Math.round(average * 2) / 2;
     //first determine averageForStars using unrounded average then round the average for template (not much difference, but still)
     average = average.toFixed(1);
+    //creating the obj for feeding the chart
+    let ratingOccurance = {
+      1: 0,
+      2: 0,
+      3: 0,
+      4: 0,
+      5: 0,
+    };
+    campground.reviews.reduce(function (acc, current) {
+      acc[current.rating] += 1;
+      return acc;
+    }, ratingOccurance);
+    //   console.log(ratingOccurance);
+
+    for (const key in ratingOccurance) {
+      ratingPercent[key] = Math.round(
+        (ratingOccurance[key] / numOfReviews) * 100
+      );
+    }
   }
   //only if the user is logged in, check if he already made a review
   let userReview;
@@ -40,8 +61,11 @@ module.exports.indexReview = async (req, res) => {
     }
   }
   //if query then sort the camground.reviews by the # of stars once the userReview is spliced, thats why we dont pull from DB onlt the query rev, but everyting
+  let reviewsSpecificStarNum = null;
   if (rating) {
-    campground.reviews = campground.reviews.filter(function (review) {
+    // campground.reviews = campground.reviews.filter(function (review) {
+    //   return review.rating == Number(rating);
+    reviewsSpecificStarNum = campground.reviews.filter(function (review) {
       return review.rating == Number(rating);
     });
   }
@@ -58,6 +82,9 @@ module.exports.indexReview = async (req, res) => {
     dateDiffAprox,
     averageForStars,
     average,
+    reviewsSpecificStarNum,
+    ratingPercent,
+    numOfReviews,
   });
 };
 

@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/stylesheets/starabilityHalf.css" />
 
 <div class="row">
-  <div class="col-sm-3">
+  <div class="px-4 px-sm-0 col-sm-10 col-md-4 col-lg-3">
     <%if(reviews.length || userReview){%>
     <h5 class="mb-3">Customer reviews</h5>
     <p class="mb-2"><%=average%> out of 5 stars</p>
@@ -13,51 +13,14 @@
     <small class="text-muted"
       >(<%=userReview?reviews.length +1: reviews.length%> ratings)</small
     >
-
-    <div>
-      <div>
-        <a
-          style="color: #f5bd23; font-size: 20px"
-          href="/campgrounds/<%=campgroundID%>/reviews?rating=1"
-          >&#9733;</a
-        >
-      </div>
-      <div>
-        <a
-          style="color: #f5bd23; font-size: 20px"
-          href="/campgrounds/<%=campgroundID%>/reviews?rating=2"
-          >&#9733;&#9733;</a
-        >
-      </div>
-      <div>
-        <a
-          style="color: #f5bd23; font-size: 20px"
-          href="/campgrounds/<%=campgroundID%>/reviews?rating=3"
-          >&#9733;&#9733;&#9733;</a
-        >
-      </div>
-      <div>
-        <a
-          style="color: #f5bd23; font-size: 20px"
-          href="/campgrounds/<%=campgroundID%>/reviews?rating=4"
-          >&#9733;&#9733;&#9733;&#9733;</a
-        >
-      </div>
-      <div>
-        <a
-          style="color: #f5bd23; font-size: 20px"
-          href="/campgrounds/<%=campgroundID%>/reviews?rating=5"
-          >&#9733;&#9733;&#9733;&#9733;&#9733;</a
-        >
-      </div>
-      <div>
-        <a href="/campgrounds/<%=campgroundID%>/reviews">All reviews</a>
-      </div>
-    </div>
     <canvas id="myChart"></canvas>
+    <div>
+      <a href="/campgrounds/<%=campgroundID%>/reviews">All reviews</a>
+    </div>
+
     <%}%>
   </div>
-  <div class="col-sm-6">
+  <div class="px-4 px-sm-0 col-md-7 col-lg-6 offset-md-1">
     <h4 class="mb-4">
       <a href="/campgrounds/<%=campgroundID%>"><%=title%></a>
     </h4>
@@ -244,8 +207,12 @@
     <div class="mb-4">
       <a href="/login" class="btn btn-success btn-lg">Leave a review</a>
     </div>
-    <%}%> <%for(let review of reviews){%> <%-include("../partials/review",
-    {review})%> <%}%>
+    <%}%>
+    <!-- displaying the reviews, if there is query ?star=1 then i filer the reivews and display reviewsSpecificStarNum -->
+    <%if(reviewsSpecificStarNum){%> <%for(let review of
+    reviewsSpecificStarNum){%> <%-include("../partials/review", {review})%>
+    <%}%> <%}else{%> <%for(let review of reviews){%>
+    <%-include("../partials/review", {review})%> <%}%><%}%>
   </div>
 </div>
 <script>
@@ -272,27 +239,207 @@
   crossorigin="anonymous"
   src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
 ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
 <script>
-  const ctx = document.getElementById("myChart");
+  document.addEventListener("DOMContentLoaded", (e) => {
+    const ctx = document.getElementById("myChart");
 
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: ["5 star", "4 star", "3 star", "2 star", "1 star"],
-      datasets: [
-        {
-          label: "# of Votes",
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 1,
+    const chartStars = new Chart(ctx, {
+      type: "bar",
+      plugins: [ChartDataLabels],
+      data: {
+        labels: ["5 star", "4 star", "3 star", "2 star", "1 star"],
+        datasets: [
+          {
+            label: "# of Votes",
+            // data: [50, 20, 10, 5, 15],
+            data: [
+              {
+                stars: "5 star",
+                rating: {
+                  value: "<%=ratingPercent['5']%>",
+                  link: "/campgrounds/<%=campgroundID%>/reviews?rating=5",
+                },
+              },
+              {
+                stars: "4 star",
+                rating: {
+                  value: "<%=ratingPercent['4']%>",
+                  link: "/campgrounds/<%=campgroundID%>/reviews?rating=4",
+                },
+              },
+              {
+                stars: "3 star",
+                rating: {
+                  value: "<%=ratingPercent['3']%>",
+                  link: "/campgrounds/<%=campgroundID%>/reviews?rating=3",
+                },
+              },
+              {
+                stars: "2 star",
+                rating: {
+                  value: "<%=ratingPercent['2']%>",
+                  link: "/campgrounds/<%=campgroundID%>/reviews?rating=2",
+                },
+              },
+              {
+                stars: "1 star",
+                rating: {
+                  value: "<%=ratingPercent['1']%>",
+                  link: "/campgrounds/<%=campgroundID%>/reviews?rating=1",
+                },
+              },
+            ],
+            borderWidth: 1,
+            backgroundColor: "#F5BD23",
+            borderColor: "#F5BD23",
+            borderSkipped: false,
+            borderRadius: {
+              topLeft: 5,
+              bottomLeft: 5,
+            },
+            datalabels: {
+              anchor: "start",
+              align: "end",
+              offset: 255,
+            },
+          },
+          {
+            label: "# of Votes",
+            data: [
+              {
+                stars: "5 star",
+                rating: {
+                  value: 100,
+                  link: "/campgrounds/<%=campgroundID%>/reviews?rating=5",
+                },
+              },
+              {
+                stars: "4 star",
+                rating: {
+                  value: 100,
+                  link: "/campgrounds/<%=campgroundID%>/reviews?rating=4",
+                },
+              },
+              {
+                stars: "3 star",
+                rating: {
+                  value: 100,
+                  link: "/campgrounds/<%=campgroundID%>/reviews?rating=3",
+                },
+              },
+              {
+                stars: "2 star",
+                rating: {
+                  value: 100,
+                  link: "/campgrounds/<%=campgroundID%>/reviews?rating=2",
+                },
+              },
+              {
+                stars: "1 star",
+                rating: {
+                  value: 100,
+                  link: "/campgrounds/<%=campgroundID%>/reviews?rating=1",
+                },
+              },
+            ],
+
+            borderWidth: 1,
+            backgroundColor: "white",
+            borderColor: "black",
+            borderSkipped: false,
+            borderRadius: {
+              topLeft: 5,
+              topRight: 5,
+              bottomLeft: 5,
+              bottomRight: 5,
+            },
+            datalabels: {
+              display: false,
+            },
+            grouped: false,
+          },
+        ],
+      },
+      options: {
+        // responsive: true,
+        aspectRatio: 1.6,
+        layout: {
+          padding: {
+            right: 30,
+          },
         },
-      ],
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
+        indexAxis: "y",
+        parsing: {
+          // xAxisKey: "stars",
+          // yAxisKey: "rating.value",
+          xAxisKey: "rating.value",
+          yAxisKey: "stars",
+        },
+        plugins: {
+          datalabels: {
+            formatter: (val) => {
+              // console.log(val);
+              return val.rating.value + "%";
+            },
+            font: {
+              size: 14,
+            },
+          },
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            enabled: false,
+            hover: { mode: null },
+          },
+        },
+
+        scales: {
+          y: {
+            beginAtZero: true,
+            border: { display: false },
+            grid: {
+              display: false,
+            },
+          },
+          x: {
+            border: { display: false },
+            ticks: {
+              display: false,
+            },
+            grid: {
+              display: false,
+            },
+          },
         },
       },
-    },
+    });
+    // console.dir(chartStars);
+
+    function clickHandler(evt) {
+      const points = chartStars.getElementsAtEventForMode(
+        evt,
+        "nearest",
+        { intersect: true },
+        true
+      );
+
+      if (points.length) {
+        // console.log(points);
+        const firstPoint = points[0];
+        // const label = chartStars.data.labels[firstPoint.index];
+        // console.log(`${label} this is label`);
+        const value =
+          chartStars.data.datasets[firstPoint.datasetIndex].data[
+            firstPoint.index
+          ];
+        // console.log(value.rating.link);
+        // console.log(value);
+        location.href = value.rating.link;
+      }
+    }
+    ctx.addEventListener("click", clickHandler);
+    Chart.defaults.font.size = 14;
   });
 </script>

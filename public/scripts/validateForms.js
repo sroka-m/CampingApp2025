@@ -18,7 +18,7 @@
 
         if (radioRatingReview.length !== 0) {
           let checked = false;
-          console.dir(radioRatingReview);
+          // console.dir(radioRatingReview);
           radioRatingReview[1].setCustomValidity("");
 
           //radioRatingReview has length of 6, input[0] is noValue must always have attr checked, if not then all 5 stars will

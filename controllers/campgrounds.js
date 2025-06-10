@@ -79,16 +79,18 @@ module.exports.showCampground = async (req, res) => {
   }
   campground.reviews.reverse();
   let average;
-  if (campground.reviews.length > 0) {
+  let numOfReviews = campground.reviews.length;
+  if (numOfReviews > 0) {
     average =
       campground.reviews.reduce((total, review) => {
         return total + review.rating;
-      }, 0) / campground.reviews.length;
+      }, 0) / numOfReviews;
     average = average.toFixed(1);
   }
   //only recent reviews displayed,
-  if (campground.reviews.length >= 4) {
-    campground.reviews = campground.reviews.slice(0, 3);
+  if (numOfReviews >= 4) {
+    //arr.slice end not inlcuded
+    campground.reviews = campground.reviews.slice(0, 4);
   }
 
   // const then = new Date("2025-05-10T05:48:21.396Z");
@@ -99,6 +101,7 @@ module.exports.showCampground = async (req, res) => {
     dateDiffCreated,
     average,
     dateDiffAprox,
+    numOfReviews,
   });
 };
 

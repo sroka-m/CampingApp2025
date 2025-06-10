@@ -37,6 +37,8 @@ The corresponding validation added to the front end for smoother user expericenc
 - Added show/hide password feature.
 - Added password generator.
 
+- Added chart showing percentage of reviews per number of stars (e.g. 40% of reviews are 5-star).
+
 ---
 
 ## Known issues
@@ -60,6 +62,13 @@ The corresponding validation added to the front end for smoother user expericenc
 - I might add FE validation to check common passwords, but I would need to make another API and I already done it a few times.
 
 ### Notes about the code
+
+- chart.js:
+  For the white portion of the chart, I could have added a background, but that requires calculating the size of the bars so that the background is exactly the width of the bar. (Also, I am not sure if I would be able to add a border on the background.) Instead, I simply added another dataset with values 100% and set grouped: false. This also allowed me to add links to both the orange and white bars.
+  To make the chart horizontal we need to add options.indexAxis: "y". Then I added chartjs-plugin-datalabels and the labels adjusted automatically (show old y values, x values after making the chart horizontal). However, after I made the dataset.data an object I had to use options.parsing:pathToValues. I had to give the path to y for x values, because the chart is horizontal. Also, the datalabels started to display number of stars ("1 star" etc). To fix datalabels I had to add: options.plugings.datalabels.formatter. I had to use formatter anyway to add the % unit.
+  To make the borderRadius for all 4 corners of the bar the border must be applied to all 4 sides of the bar thus borderSkipped: false,
+  To change the chart's font size I set Chart.defaults.font.size = 14. It worked, but when resizing the datalabels would get stuck with the old font size so I overwritten it in options.plugins.datalabels.font.size. This made the font size persistent.
+  To make the bars a little thicker I used options.aspectRatio.
 
 - Created function so that JOI validation is not repeated for every schema validateJoiSchema(someSchema). Initially, I did it to refactor the code. However, with time I realized that I needed to use User schema with validateAsync (need to check whether a username is already taken). Additionally, I needed to validate the Campground schema inside Multer fileFilter in routes/campground. Therefore, I only ended up using validateJoiSchema(someSchema) for a review schema. Maybe will get rid of it.
 - Inside JOI validation object, it appears that the order matters in which the functions are called. When I had .custom and .not before escapeHTML(), I got an error testing a simple string with no special characters saying: "The input cannot contain HTML". When I put escapeHTML first and then the .custom and .not, it started working as expected. I did not test it further.
