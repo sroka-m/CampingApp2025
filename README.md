@@ -2,6 +2,8 @@
 
 ## The project is a fully functional CRUD that has basic YelpCamp functionality. YelpCamp is a website where users can create and review campgrounds. To review or create a campground, you must have an account. Written in JS using Node, Express, and MongoDb. Rendered on render.com. Based on Colt Steele YelpCamp tutorial with quite a few improvements (listed below).
 
+## Link to Colt's YelpCamp project https://github.com/Colt/YelpCamp
+
 ## List of main changes to Colt's project:
 
 - Made sure that when a user logs in/registers they are re-directed to the page they had been on before login/registration took place. Achieved by storing a previous URL in a session. The fix for this problem was outdated. A list of exceptions was updated: login, register, home, API calls to the back-end (res.json), URL of requests that do not have corresponding, identical GET URL (e.g. updating and deleting a review follows a pattern /campgrounds/:id/reviews/:reviewId, the GET request with such URL does not exist, since reviews are displayed as a list under /campgrounds/:id/reviews).
