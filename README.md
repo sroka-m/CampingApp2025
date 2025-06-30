@@ -41,6 +41,10 @@ The corresponding validation added to the front end for smoother user expericenc
 
 - Added chart showing percentage of reviews per number of stars (e.g. 40% of reviews are 5-star).
 
+- Added pagination for indexing campgrounds
+
+- Added search functionality (autocomplete option for campgrounds index on title and location fields, with fuzzy option)
+
 ---
 
 ## Known issues
@@ -62,6 +66,10 @@ The corresponding validation added to the front end for smoother user expericenc
 - To use file-type, ESM package to validate file type based on magc numbers
 - To extend the array with passwords that are not safe to use. There are 100,000 passwords at https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.json. When filtered for words with a length greater than or equal to 8, the number decreases by half. However, even after minification, the file is 500kB. Using the jsonminify npm package, removed the quotes around words and the outer []. The size dropped to 100kB but I am still unsure if it would be a good idea to run a search against an array 40k long.
 - I might add FE validation to check common passwords, but I would need to make another API and I already done it a few times.
+- Paginaiton is implemented using skip/limit, it would be good to implement pagination using pagination tokens (cursor-based pagination). Also, it would be useful perhaps to add infinite scroll to reviews.
+- It would be nice to add filter functinality so that a user could type in a location and the nearby camps would be shown. Currently camps are visible on the map. Sadly, using mongo near operator requires geospatial index and it is not compatible with other indexes, like search index https://www.mongodb.com/docs/manual/reference/operator/query/near/.
+- To show the most recent reviews I reverse the reviews array. I found it is rather cumbersome to sort documents that are populated, however, it is apparentely done with $lookup, I might address it at a later stage https://www.mongodb.com/community/forums/t/sorting-a-populated-field/10083/4
+  https://github.com/Automattic/mongoose/issues/2202
 
 ### Notes about the code
 
@@ -76,3 +84,4 @@ The corresponding validation added to the front end for smoother user expericenc
 - Created function so that JOI validation is not repeated for every schema validateJoiSchema(someSchema). Initially, I did it to refactor the code. However, with time I realized that I needed to use User schema with validateAsync (need to check whether a username is already taken). Additionally, I needed to validate the Campground schema inside Multer fileFilter in routes/campground. Therefore, I only ended up using validateJoiSchema(someSchema) for a review schema. Maybe will get rid of it.
 - Inside JOI validation object, it appears that the order matters in which the functions are called. When I had .custom and .not before escapeHTML(), I got an error testing a simple string with no special characters saying: "The input cannot contain HTML". When I put escapeHTML first and then the .custom and .not, it started working as expected. I did not test it further.
 - Inside the app.js in the section when I exclude the paths that ought to be stored in session, it appears that the path to API (res.json) needs to be last. [/login, /register etc etc /APIpath]
+-

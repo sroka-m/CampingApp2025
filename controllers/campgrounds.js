@@ -2,14 +2,116 @@ const Campground = require("../models/campground");
 const { cloudinary } = require("../claudinary");
 const ExpressError = require("../utils/ExpressError");
 const dateDiffAprox = require("../utils/dateDiffAprox");
+const paginaHelper = require("../utils/paginaHelper");
 const maptilerClient = require("@maptiler/client");
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 const mapkey = maptilerClient.config.apiKey;
 
 module.exports.index = async (req, res) => {
-  const campgrounds = await Campground.find({});
-  campgrounds.reverse();
-  res.render("campgrounds/index", { campgrounds });
+  let { query, page } = req.query;
+  page = parseInt(page, 10) || 1;
+  if (page < 1) {
+    res.redirect(`/campgrounds?query=${query}&page=${encodeURIComponent("1")}`);
+  }
+
+  const pageSize = 10;
+  if (query) {
+    const campgrounds = await Campground.aggregate([
+      {
+        $search: {
+          index: "default",
+          compound: {
+            should: [
+              {
+                autocomplete: {
+                  query: query,
+                  path: "title",
+                  tokenOrder: "any",
+                  fuzzy: { prefixLength: 4 },
+                },
+              },
+              {
+                autocomplete: {
+                  query: query,
+                  path: "location",
+                  tokenOrder: "any",
+                  fuzzy: { prefixLength: 4 },
+                },
+              },
+            ],
+            minimumShouldMatch: 1,
+          },
+
+          sort: { score: { $meta: "searchScore" }, _id: -1 },
+        },
+      },
+      {
+        $facet: {
+          metadata: [{ $count: "totalCount" }],
+          data: [{ $skip: (page - 1) * pageSize }, { $limit: pageSize }],
+        },
+      },
+    ]);
+    //if no results then flash error and redirect to no first page
+    // console.log(
+    //   campgrounds[0].metadata[0].totalCount + " this iis totla count"
+    // );
+    if (!campgrounds[0].metadata[0]) {
+      req.flash("error", "No results found");
+      return res.redirect("/campgrounds");
+    }
+
+    numOfPages = Math.ceil(campgrounds[0].metadata[0].totalCount / pageSize);
+    if (page > numOfPages) {
+      res.redirect(
+        `/campgrounds?query=${query}&page=${encodeURIComponent(numOfPages)}`
+      );
+    }
+
+    let { iterStrt, span } = paginaHelper(numOfPages, page);
+    // return res.send(campgrounds);
+    return res.render("campgrounds/index", {
+      campgrounds,
+      page,
+      query,
+      iterStrt,
+      span,
+      numOfPages,
+    });
+  } else {
+    const campgrounds = await Campground.aggregate([
+      {
+        $sort: { _id: -1 },
+      },
+      {
+        $facet: {
+          metadata: [{ $count: "totalCount" }],
+          data: [{ $skip: (page - 1) * pageSize }, { $limit: pageSize }],
+        },
+      },
+    ]);
+
+    numOfPages = Math.ceil(campgrounds[0].metadata[0].totalCount / pageSize);
+    if (page > numOfPages) {
+      res.redirect(
+        `/campgrounds?query=${query}&page=${encodeURIComponent(numOfPages)}`
+      );
+    }
+
+    let { iterStrt, span } = paginaHelper(numOfPages, page);
+    // res.send(campgrounds);
+    res.render("campgrounds/index", {
+      campgrounds,
+      page,
+      iterStrt,
+      span,
+      query,
+      numOfPages,
+    });
+  }
+  // const campgrounds = await Campground.find({});
+  // campgrounds.reverse();
+  // res.render("campgrounds/index", { campgrounds });
 };
 
 module.exports.renderNewForm = (req, res) => {
