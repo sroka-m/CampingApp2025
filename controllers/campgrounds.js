@@ -79,7 +79,7 @@ module.exports.index = async (req, res) => {
       numOfPages,
     });
   } else {
-    const totalCamps = await Campground.count({});
+    const totalCamps = await Campground.countDocuments({}); //Campground.count is not a function
     // metadata: [{ $count: "totalCount" }],
     const campgrounds = await Campground.aggregate([
       {
