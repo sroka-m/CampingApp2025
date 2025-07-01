@@ -4,7 +4,7 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require("express");
 const path = require("node:path");
-favicon = require("serve-favicon");
+const favicon = require("serve-favicon");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const mongoSanitize = require("express-mongo-sanitize");

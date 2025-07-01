@@ -79,19 +79,21 @@ module.exports.index = async (req, res) => {
       numOfPages,
     });
   } else {
+    const totalCamps = await Campground.count({});
+    // metadata: [{ $count: "totalCount" }],
     const campgrounds = await Campground.aggregate([
       {
         $sort: { _id: -1 },
       },
       {
         $facet: {
-          metadata: [{ $count: "totalCount" }],
           data: [{ $skip: (page - 1) * pageSize }, { $limit: pageSize }],
         },
       },
     ]);
 
-    numOfPages = Math.ceil(campgrounds[0].metadata[0].totalCount / pageSize);
+    numOfPages = Math.ceil(totalCamps / pageSize);
+    // numOfPages = Math.ceil(campgrounds[0].metadata[0].totalCount / pageSize);
     if (page > numOfPages) {
       res.redirect(
         `/campgrounds?query=${query}&page=${encodeURIComponent(numOfPages)}`
