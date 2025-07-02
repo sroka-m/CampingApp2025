@@ -79,21 +79,29 @@ module.exports.index = async (req, res) => {
       numOfPages,
     });
   } else {
-    const totalCamps = await Campground.countDocuments({}); //Campground.count is not a function
-    // metadata: [{ $count: "totalCount" }],
+    //I tried to use countDocuments when the deployed applicaiotn was complaning about totalCount being udefined (comming from mongo metadata)
+    // const totalCamps = await Campground.countDocuments({}); //Campground.count is not a function
+
     const campgrounds = await Campground.aggregate([
       {
         $sort: { _id: -1 },
       },
       {
         $facet: {
+          metadata: [{ $count: "totalCount" }],
           data: [{ $skip: (page - 1) * pageSize }, { $limit: pageSize }],
         },
       },
     ]);
 
-    numOfPages = Math.ceil(totalCamps / pageSize);
-    // numOfPages = Math.ceil(campgrounds[0].metadata[0].totalCount / pageSize);
+    //if db is empty
+    if (!campgrounds[0].metadata[0]) {
+      numOfPages = 1;
+    } else {
+      // numOfPages = Math.ceil(totalCamps / pageSize);
+      numOfPages = Math.ceil(campgrounds[0].metadata[0].totalCount / pageSize);
+    }
+
     if (page > numOfPages) {
       res.redirect(
         `/campgrounds?query=${query}&page=${encodeURIComponent(numOfPages)}`

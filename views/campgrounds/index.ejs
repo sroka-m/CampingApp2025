@@ -33,6 +33,7 @@
   </div>
   <%}%>
 </ul>
+<%if(campgrounds[0].data.length !== 0){%>
 <nav aria-label="paginaiton">
   <ul class="pagination justify-content-center">
     <%if(numOfPages > span && page>Math.ceil(span/2)){%>
@@ -71,4 +72,5 @@
     <%}%>
   </ul>
 </nav>
+<%}%>
 <script src="/scripts/clusterMap.js"></script>

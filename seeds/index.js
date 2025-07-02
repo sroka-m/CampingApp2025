@@ -28,7 +28,7 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)];
 const seedsDB_UK = async () => {
   await Campground.deleteMany({});
   await Review.deleteMany({});
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 150; i++) {
     //gb.json has length 258
     const picRand = Math.floor(Math.random() * imgCloud.length);
     const randomCityArr = Math.floor(Math.random() * 258);
